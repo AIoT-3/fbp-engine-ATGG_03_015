@@ -1,0 +1,32 @@
+# Maven / Java build outputs
+target/
+out/
+*.class
+*.log
+hs_err_pid*
+replay_pid*
+
+# Maven helper files
+.mvn/timing.properties
+dependency-reduced-pom.xml
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# IDE metadata
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*~
+*.swp
