@@ -45,4 +45,28 @@ class PrintNodeTest {
         // Then
         assertInstanceOf(Node.class, printNode);
     }
+
+    @Test
+    @DisplayName("getInputPort가 null이 아님(1)")
+    void testGetInputPort() {
+        // Given
+        PrintNode printNode = new PrintNode("printNode1");
+
+        // When
+        var inputPort = printNode.getInputPort();
+
+        // Then
+        assertNotNull(inputPort);
+    }
+
+    @Test
+    @DisplayName("InputPort의 receive() 호출 시 process()가 호출되는지(2)")
+    void testInputPortReceive() {
+        // Given
+        PrintNode printNode = new PrintNode("printNode1");
+        Message message = Message.of(Map.of("key", "value"));
+
+        // When & Then
+        assertDoesNotThrow(() -> printNode.getInputPort().receive(message));
+    }
 }
