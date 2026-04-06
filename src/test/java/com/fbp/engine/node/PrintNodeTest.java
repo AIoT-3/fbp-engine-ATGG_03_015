@@ -1,5 +1,6 @@
-package com.fbp.engine.core;
+package com.fbp.engine.node;
 
+import com.fbp.engine.core.Node;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
