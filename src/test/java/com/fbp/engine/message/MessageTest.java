@@ -112,7 +112,7 @@ class MessageTest {
         Message message = Message.of(payload);
 
         // When
-        Message newMessage = message.withoutkey("key1");
+        Message newMessage = message.withoutKey("key1");
 
         // Then
         assertAll(

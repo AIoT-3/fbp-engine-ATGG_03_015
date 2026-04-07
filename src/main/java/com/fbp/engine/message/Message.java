@@ -37,7 +37,7 @@ public record Message (
         return payload.containsKey(key);
     }
 
-    public Message withoutkey(String key) {
+    public Message withoutKey(String key) {
         Map<String, Object> newPayload = new HashMap<>(this.payload);
         newPayload.remove(key);
         return new Message(
