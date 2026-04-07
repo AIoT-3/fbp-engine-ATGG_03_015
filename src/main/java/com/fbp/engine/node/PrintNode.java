@@ -23,6 +23,10 @@ public class PrintNode implements Node {
 
     @Override
     public void process(Message message) {
-        System.out.printf("[%s] %s", id, message);
+        System.out.printf("[%s] %s%n", id, message);
+    }
+
+    public InputPort getInputPort() {
+        return inputPort;
     }
 }

@@ -1,5 +1,6 @@
 package com.fbp.engine.node;
 
+import com.fbp.engine.core.Connection;
 import com.fbp.engine.core.OutputPort;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
@@ -19,14 +20,14 @@ import static org.mockito.BDDMockito.times;
 class GeneratorNodeTest {
 
     @Mock
-    private OutputPort mockOutputPort;
+    private Connection mockConnection;
 
     @Test
     @DisplayName("generate: OutputPort의 send()가 호출되고, 메시지에 key와 value가 포함되는지(1)(2)")
     void testGenerate() {
         // Given
         GeneratorNode generatorNode = new GeneratorNode("testNode");
-        generatorNode.setOutputPort(mockOutputPort);
+        generatorNode.getOutputPort().connect(mockConnection);
         String testKey = "testKey";
         String testValue = "testValue";
 
@@ -34,8 +35,8 @@ class GeneratorNodeTest {
         generatorNode.generate("testKey", "testValue");
 
         // Then
-        then(mockOutputPort).should().send(any(Message.class));
-        then(mockOutputPort).should().send(argThat(message ->
+        then(mockConnection).should().deliver(any(Message.class));
+        then(mockConnection).should().deliver(argThat(message ->
                 "testValue".equals(message.get(testKey))
         ));
     }
@@ -45,7 +46,7 @@ class GeneratorNodeTest {
     void testGenerateMultipleTimes() {
         // Given
         GeneratorNode generatorNode = new GeneratorNode("testNode");
-        generatorNode.setOutputPort(mockOutputPort);
+        generatorNode.getOutputPort().connect(mockConnection);
         ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
 
         // When
@@ -54,7 +55,7 @@ class GeneratorNodeTest {
         generatorNode.generate("key3", "value3");
 
         // Then
-        then(mockOutputPort).should(times(3)).send(messageCaptor.capture());
+        then(mockConnection).should(times(3)).deliver(messageCaptor.capture());
         assertAll(
                 () -> assertEquals("value1", messageCaptor.getAllValues().get(0).get("key1")),
                 () -> assertEquals("value2", messageCaptor.getAllValues().get(1).get("key2")),
@@ -67,13 +68,11 @@ class GeneratorNodeTest {
     void testGetOutputPort() {
         // Given
         GeneratorNode generatorNode = new GeneratorNode("testNode");
-        generatorNode.setOutputPort(mockOutputPort);
 
         // When
         OutputPort outputPort = generatorNode.getOutputPort();
 
         // Then
         assertNotNull(outputPort);
-        assertEquals(mockOutputPort, outputPort);
     }
 }

@@ -1,7 +1,6 @@
 package com.fbp.engine.node;
 
-import com.fbp.engine.core.InputPort;
-import com.fbp.engine.core.OutputPort;
+import com.fbp.engine.core.Connection;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,25 +17,21 @@ import static org.mockito.BDDMockito.then;
 class FilterNodeTest {
 
     @Mock
-    InputPort mockInputPort;
-
-    @Mock
-    OutputPort mockOutputPort;
+    Connection mockConnection;
 
     @Test
     @DisplayName("process: threshold 이상인 값을 가진 메시지가 OutputPort로 전달되는지(1)")
     void testProcessAboveThreshold() {
         // Given
         FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
-        filterNode.setInputPort(mockInputPort);
-        filterNode.setOutputPort(mockOutputPort);
+        filterNode.getOutputPort().connect(mockConnection);
         Message message = Message.of(Map.of("value", 15.0));
 
         // When
         filterNode.process(message);
 
         // Then
-        then(mockOutputPort).should().send(message);
+        then(mockConnection).should().deliver(message);
     }
 
     @Test
@@ -44,15 +39,14 @@ class FilterNodeTest {
     void testProcessBelowThreshold() {
         // Given
         FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
-        filterNode.setInputPort(mockInputPort);
-        filterNode.setOutputPort(mockOutputPort);
+        filterNode.getOutputPort().connect(mockConnection);
         Message message = Message.of(Map.of("value", 5.0));
 
         // When
         filterNode.process(message);
 
         // Then
-        then(mockOutputPort).shouldHaveNoInteractions();
+        then(mockConnection).shouldHaveNoInteractions();
     }
 
     @Test
@@ -60,15 +54,14 @@ class FilterNodeTest {
     void testProcessAtThreshold() {
         // Given
         FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
-        filterNode.setInputPort(mockInputPort);
-        filterNode.setOutputPort(mockOutputPort);
+        filterNode.getOutputPort().connect(mockConnection);
         Message message = Message.of(Map.of("value", 10.0));
 
         // When
         filterNode.process(message);
 
         // Then
-        then(mockOutputPort).should().send(message);
+        then(mockConnection).should().deliver(message);
     }
 
     @Test
@@ -76,12 +69,11 @@ class FilterNodeTest {
     void testProcessMissingKey() {
         // Given
         FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
-        filterNode.setInputPort(mockInputPort);
-        filterNode.setOutputPort(mockOutputPort);
+        filterNode.getOutputPort().connect(mockConnection);
         Message message = Message.of(Map.of("otherKey", 15.0));
 
         // When & Then
         assertDoesNotThrow(() -> filterNode.process(message));
-        then(mockOutputPort).shouldHaveNoInteractions();
+        then(mockConnection).shouldHaveNoInteractions();
     }
 }
