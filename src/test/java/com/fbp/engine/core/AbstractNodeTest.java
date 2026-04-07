@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 
 class AbstractNodeTest {
 
@@ -73,8 +72,8 @@ class AbstractNodeTest {
         TestNode node = new TestNode("testNode1");
 
         // Then
-        assertNull(node.getInputPort(anyString()));
-        assertNull(node.getOutputPort(anyString()));
+        assertNull(node.getInputPort("없는포트"));
+        assertNull(node.getOutputPort("없는포트"));
     }
 
     @Test

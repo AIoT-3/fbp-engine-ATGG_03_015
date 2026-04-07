@@ -38,10 +38,7 @@ public class A1S405 {
                 try {
                     filterNode.process(connection1.poll());
                 } catch (IllegalStateException e) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        return;
-                    }
-                    throw e;
+                    return;
                 }
             }
         });
@@ -51,10 +48,7 @@ public class A1S405 {
                 try {
                     printNode.process(connection2.poll());
                 } catch (IllegalStateException e) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        return;
-                    }
-                    throw e;
+                    return;
                 }
             }
         });

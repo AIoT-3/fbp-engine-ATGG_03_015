@@ -22,7 +22,7 @@ class MessageTest {
         assertAll(
                 () -> assertNotNull(message.id()),
                 () -> assertEquals("value1", message.get("key1")),
-                () -> assertEquals(123, (Integer) message.get("key2")),
+                () -> assertEquals((Integer) 123, message.get("key2")),
                 () -> assertNotNull(message.timestamp())
         );
     }

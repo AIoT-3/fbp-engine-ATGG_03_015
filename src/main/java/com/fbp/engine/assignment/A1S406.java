@@ -4,7 +4,9 @@ import com.fbp.engine.core.Connection;
 import com.fbp.engine.node.FilterNode;
 import com.fbp.engine.node.GeneratorNode;
 import com.fbp.engine.node.PrintNode;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class A1S406 {
     private static volatile boolean running = true;
     private static final long CONSUMER_DELAY_MS = 3000;
@@ -24,7 +26,7 @@ public class A1S406 {
 
             for (double temperature : temperatures) {
                 generatorNode.generate("temperature", temperature);
-                System.out.printf("[generator] connection1 buffer size: %d%n", connection1.getBufferSize());
+                log.info("[generator] connection1 buffer size: {}", connection1.getBufferSize());
 
                 try {
                     Thread.sleep(1000);
@@ -39,14 +41,11 @@ public class A1S406 {
             while (running || connection1.getBufferSize() > 0) {
                 try {
                     filterNode.process(connection1.poll());
-                    System.out.printf("[filter] connection1=%d, connection2=%d%n",
+                    log.info("[filter] connection1={}, connection2={}",
                             connection1.getBufferSize(),
                             connection2.getBufferSize());
                 } catch (IllegalStateException e) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        return;
-                    }
-                    throw e;
+                    return;
                 }
             }
         });
@@ -55,13 +54,10 @@ public class A1S406 {
             while (running || connection2.getBufferSize() > 0) {
                 try {
                     printNode.process(connection2.poll());
-                    System.out.printf("[printer] connection2 buffer size: %d%n", connection2.getBufferSize());
+                    log.info("[printer] connection2 buffer size: {}", connection2.getBufferSize());
                     Thread.sleep(CONSUMER_DELAY_MS);
                 } catch (IllegalStateException e) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        return;
-                    }
-                    throw e;
+                    return;
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;

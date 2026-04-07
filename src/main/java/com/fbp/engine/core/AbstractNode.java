@@ -25,9 +25,10 @@ public abstract class AbstractNode implements Node {
 
     @Override
     public void process(Message message) {
-        log.info("[{}] ==> 전처리: {}", id, message);
+        // 시끄러워서 주석 처리함
+        // log.info("[{}] ==> 전처리: {}", id, message);
         onProcess(message);
-        log.info("[{}] <== 후처리: {}", id, message);
+        // log.info("[{}] <== 후처리: {}", id, message);
     }
 
     @Override

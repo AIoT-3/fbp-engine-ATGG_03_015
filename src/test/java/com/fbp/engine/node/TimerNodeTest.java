@@ -68,6 +68,7 @@ class TimerNodeTest {
         Message message = connection.poll();
         timerNode.shutdown();
         int sizeAfterShutdown = connection.getBufferSize();
+
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -77,7 +78,7 @@ class TimerNodeTest {
         // Then
         assertAll(
                 () -> assertNotNull(message),
-                () -> assertEquals(0, sizeAfterShutdown)
+                () -> assertEquals(sizeAfterShutdown, connection.getBufferSize())
         );
     }
 
