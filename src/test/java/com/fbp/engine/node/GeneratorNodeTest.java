@@ -27,9 +27,7 @@ class GeneratorNodeTest {
     void testGenerate() {
         // Given
         GeneratorNode generatorNode = new GeneratorNode("testNode");
-        generatorNode.getOutputPort().connect(mockConnection);
-        String testKey = "testKey";
-        String testValue = "testValue";
+        generatorNode.getOutputPort("out").connect(mockConnection);
 
         // When
         generatorNode.generate("testKey", "testValue");
@@ -37,7 +35,7 @@ class GeneratorNodeTest {
         // Then
         then(mockConnection).should().deliver(any(Message.class));
         then(mockConnection).should().deliver(argThat(message ->
-                "testValue".equals(message.get(testKey))
+                "testValue".equals(message.get("testKey"))
         ));
     }
 
@@ -46,7 +44,7 @@ class GeneratorNodeTest {
     void testGenerateMultipleTimes() {
         // Given
         GeneratorNode generatorNode = new GeneratorNode("testNode");
-        generatorNode.getOutputPort().connect(mockConnection);
+        generatorNode.getOutputPort("out").connect(mockConnection);
         ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
 
         // When
@@ -70,7 +68,7 @@ class GeneratorNodeTest {
         GeneratorNode generatorNode = new GeneratorNode("testNode");
 
         // When
-        OutputPort outputPort = generatorNode.getOutputPort();
+        OutputPort outputPort = generatorNode.getOutputPort("out");
 
         // Then
         assertNotNull(outputPort);

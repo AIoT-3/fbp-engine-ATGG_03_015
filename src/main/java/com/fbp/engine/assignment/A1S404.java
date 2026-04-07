@@ -10,7 +10,7 @@ public class A1S404 {
         GeneratorNode generatorNode = new GeneratorNode("generator");
         PrintNode printNode = new PrintNode("printer");
         Connection connection = new Connection("generator-to-printer");
-        generatorNode.getOutputPort().connect(connection);
+        generatorNode.getOutputPort("out").connect(connection);
 
         Thread producer = new Thread(() -> {
             for (int i = 1; i <= 5; i++) {

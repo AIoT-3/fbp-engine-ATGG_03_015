@@ -1,6 +1,7 @@
 package com.fbp.engine.core;
 
 import com.fbp.engine.message.Message;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.concurrent.BlockingQueue;
@@ -9,8 +10,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Connection {
     private static final int DEFAULT_BUFFER_CAPACITY = 100;
 
-    private String id;
-    private BlockingQueue<Message> buffer;
+    @Getter
+    private final String id;
+    private final BlockingQueue<Message> buffer;
     @Setter
     private InputPort target;
 

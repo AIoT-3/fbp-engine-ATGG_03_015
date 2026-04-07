@@ -16,8 +16,8 @@ public class A1S406 {
         Connection connection2 = new Connection("connection2");
         PrintNode printNode = new PrintNode("printer");
 
-        generatorNode.getOutputPort().connect(connection1);
-        filterNode.getOutputPort().connect(connection2);
+        generatorNode.getOutputPort("out").connect(connection1);
+        filterNode.getOutputPort("out").connect(connection2);
 
         Thread generatorThread = new Thread(() -> {
             double[] temperatures = {25.0, 35.0, 28.0, 40.0, 32.0};

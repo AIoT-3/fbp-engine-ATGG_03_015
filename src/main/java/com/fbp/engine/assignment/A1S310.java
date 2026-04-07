@@ -10,11 +10,11 @@ public class A1S310 {
         GeneratorNode generatorNode = new GeneratorNode("generator");
         FilterNode filterNode = new FilterNode("filter", "temperature", 30);
         Connection filterConnection = new Connection("filterConnection");
-        generatorNode.getOutputPort().connect(filterConnection);
+        generatorNode.getOutputPort("out").connect(filterConnection);
 
         PrintNode printNode1 = new PrintNode("printer1");
         Connection connection1 = new Connection("connection1");
-        filterNode.getOutputPort().connect(connection1);
+        filterNode.getOutputPort("out").connect(connection1);
 
         generatorNode.generate("temperature", 25.0);
         filterNode.process(filterConnection.poll());

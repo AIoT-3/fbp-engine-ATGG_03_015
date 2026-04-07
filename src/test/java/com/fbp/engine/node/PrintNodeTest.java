@@ -1,5 +1,7 @@
 package com.fbp.engine.node;
 
+import com.fbp.engine.core.AbstractNode;
+import com.fbp.engine.core.InputPort;
 import com.fbp.engine.core.Node;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
@@ -47,13 +49,13 @@ class PrintNodeTest {
     }
 
     @Test
-    @DisplayName("getInputPort가 null이 아님(1)")
+    @DisplayName("getInputPort(in)가 null이 아님(1)")
     void testGetInputPort() {
         // Given
         PrintNode printNode = new PrintNode("printNode1");
 
         // When
-        var inputPort = printNode.getInputPort();
+        InputPort inputPort = printNode.getInputPort("in");
 
         // Then
         assertNotNull(inputPort);
@@ -67,6 +69,16 @@ class PrintNodeTest {
         Message message = Message.of(Map.of("key", "value"));
 
         // When & Then
-        assertDoesNotThrow(() -> printNode.getInputPort().receive(message));
+        assertDoesNotThrow(() -> printNode.getInputPort("in").receive(message));
+    }
+
+    @Test
+    @DisplayName("instanceof: PrintNode가 AbstractNode의 인스턴스인지(3)")
+    void testInstanceOfAbstractNode() {
+        // Given
+        PrintNode printNode = new PrintNode("printNode1");
+
+        // Then
+        assertInstanceOf(AbstractNode.class, printNode);
     }
 }

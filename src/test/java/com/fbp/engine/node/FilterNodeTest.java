@@ -1,6 +1,8 @@
 package com.fbp.engine.node;
 
 import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.InputPort;
+import com.fbp.engine.core.OutputPort;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,7 @@ class FilterNodeTest {
     void testProcessAboveThreshold() {
         // Given
         FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
-        filterNode.getOutputPort().connect(mockConnection);
+        filterNode.getOutputPort("out").connect(mockConnection);
         Message message = Message.of(Map.of("value", 15.0));
 
         // When
@@ -39,7 +41,7 @@ class FilterNodeTest {
     void testProcessBelowThreshold() {
         // Given
         FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
-        filterNode.getOutputPort().connect(mockConnection);
+        filterNode.getOutputPort("out").connect(mockConnection);
         Message message = Message.of(Map.of("value", 5.0));
 
         // When
@@ -54,7 +56,7 @@ class FilterNodeTest {
     void testProcessAtThreshold() {
         // Given
         FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
-        filterNode.getOutputPort().connect(mockConnection);
+        filterNode.getOutputPort("out").connect(mockConnection);
         Message message = Message.of(Map.of("value", 10.0));
 
         // When
@@ -69,11 +71,28 @@ class FilterNodeTest {
     void testProcessMissingKey() {
         // Given
         FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
-        filterNode.getOutputPort().connect(mockConnection);
+        filterNode.getOutputPort("out").connect(mockConnection);
         Message message = Message.of(Map.of("otherKey", 15.0));
 
         // When & Then
         assertDoesNotThrow(() -> filterNode.process(message));
         then(mockConnection).shouldHaveNoInteractions();
+    }
+
+    @Test
+    @DisplayName("getInputPort(in), getOutputPort(out)가 null이 아님(3)")
+    void testGetPorts() {
+        // Given
+        FilterNode filterNode = new FilterNode("testNode", "value", 10.0);
+
+        // When
+        InputPort inputPort = filterNode.getInputPort("in");
+        OutputPort outputPort = filterNode.getOutputPort("out");
+
+        // Then
+        assertAll(
+                () -> assertNotNull(inputPort),
+                () -> assertNotNull(outputPort)
+        );
     }
 }
