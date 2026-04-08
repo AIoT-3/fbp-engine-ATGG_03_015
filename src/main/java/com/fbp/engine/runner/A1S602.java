@@ -1,10 +1,10 @@
 package com.fbp.engine.runner;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.connection.Connection;
 import com.fbp.engine.message.Message;
-import com.fbp.engine.node.GeneratorNode;
-import com.fbp.engine.node.PrintNode;
-import com.fbp.engine.node.TransformNode;
+import com.fbp.engine.node.impl.GeneratorNode;
+import com.fbp.engine.node.impl.PrintNode;
+import com.fbp.engine.node.impl.TransformNode;
 
 import java.util.Map;
 

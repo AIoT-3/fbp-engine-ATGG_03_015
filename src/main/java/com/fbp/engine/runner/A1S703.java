@@ -1,11 +1,12 @@
 package com.fbp.engine.runner;
 
 import com.fbp.engine.connection.Connection;
+import com.fbp.engine.flow.Flow;
 import com.fbp.engine.node.impl.PrintNode;
 import com.fbp.engine.node.impl.SplitNode;
 import com.fbp.engine.node.impl.TimerNode;
 
-public class A1S604 {
+public class A1S703 {
     private static volatile boolean running = true;
 
     public static void main(String[] args) {
@@ -14,13 +15,18 @@ public class A1S604 {
         PrintNode matchPrinter = new PrintNode("matchPrinter");
         PrintNode mismatchPrinter = new PrintNode("mismatchPrinter");
 
-        Connection connection1 = new Connection("timer-to-split");
-        Connection connection2 = new Connection("split-to-matchPrinter");
-        Connection connection3 = new Connection("split-to-mismatchPrinter");
+        Flow flow = new Flow("timer-split-branch")
+                .addNode(timerNode)
+                .addNode(splitNode)
+                .addNode(matchPrinter)
+                .addNode(mismatchPrinter)
+                .connect("timer", "out", "split", "in")
+                .connect("split", "match", "matchPrinter", "in")
+                .connect("split", "mismatch", "mismatchPrinter", "in");
 
-        timerNode.getOutputPort("out").connect(connection1);
-        splitNode.getOutputPort("match").connect(connection2);
-        splitNode.getOutputPort("mismatch").connect(connection3);
+        Connection connection1 = flow.getConnections().get(0);
+        Connection connection2 = flow.getConnections().get(1);
+        Connection connection3 = flow.getConnections().get(2);
 
         Thread splitThread = new Thread(() -> {
             while (running || connection1.getBufferSize() > 0) {
@@ -56,7 +62,7 @@ public class A1S604 {
         matchThread.start();
         mismatchThread.start();
 
-        timerNode.initialize();
+        flow.initialize();
 
         try {
             Thread.sleep(7000);
@@ -64,8 +70,7 @@ public class A1S604 {
             Thread.currentThread().interrupt();
         } finally {
             running = false;
-
-            timerNode.shutdown();
+            flow.shutdown();
 
             splitThread.interrupt();
             matchThread.interrupt();

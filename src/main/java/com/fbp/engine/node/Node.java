@@ -1,4 +1,4 @@
-package com.fbp.engine.core;
+package com.fbp.engine.node;
 
 import com.fbp.engine.message.Message;
 

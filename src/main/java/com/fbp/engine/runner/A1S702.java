@@ -1,12 +1,13 @@
 package com.fbp.engine.runner;
 
 import com.fbp.engine.connection.Connection;
+import com.fbp.engine.flow.Flow;
 import com.fbp.engine.node.impl.FilterNode;
 import com.fbp.engine.node.impl.LogNode;
 import com.fbp.engine.node.impl.PrintNode;
 import com.fbp.engine.node.impl.TimerNode;
 
-public class A1S605 {
+public class A1S702 {
     private static volatile boolean running = true;
 
     public static void main(String[] args) {
@@ -15,13 +16,18 @@ public class A1S605 {
         FilterNode filterNode = new FilterNode("filter", "tick", 3);
         PrintNode printNode = new PrintNode("printer");
 
-        Connection connection1 = new Connection("timer-to-logger");
-        Connection connection2 = new Connection("logger-to-filter");
-        Connection connection3 = new Connection("filter-to-printer");
+        Flow flow = new Flow("timer-log-filter-print")
+                .addNode(timerNode)
+                .addNode(logNode)
+                .addNode(filterNode)
+                .addNode(printNode)
+                .connect("timer", "out", "logger", "in")
+                .connect("logger", "out", "filter", "in")
+                .connect("filter", "out", "printer", "in");
 
-        timerNode.getOutputPort("out").connect(connection1);
-        logNode.getOutputPort("out").connect(connection2);
-        filterNode.getOutputPort("out").connect(connection3);
+        Connection connection1 = flow.getConnections().get(0);
+        Connection connection2 = flow.getConnections().get(1);
+        Connection connection3 = flow.getConnections().get(2);
 
         Thread logThread = new Thread(() -> {
             while (running || connection1.getBufferSize() > 0) {
@@ -57,10 +63,7 @@ public class A1S605 {
         filterThread.start();
         printThread.start();
 
-        timerNode.initialize();
-        logNode.initialize();
-        filterNode.initialize();
-        printNode.initialize();
+        flow.initialize();
 
         try {
             Thread.sleep(7000);
@@ -68,11 +71,7 @@ public class A1S605 {
             Thread.currentThread().interrupt();
         } finally {
             running = false;
-
-            timerNode.shutdown();
-            logNode.shutdown();
-            filterNode.shutdown();
-            printNode.shutdown();
+            flow.shutdown();
 
             logThread.interrupt();
             filterThread.interrupt();

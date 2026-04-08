@@ -1,8 +1,8 @@
 package com.fbp.engine.runner;
 
-import com.fbp.engine.core.Connection;
-import com.fbp.engine.node.GeneratorNode;
-import com.fbp.engine.node.PrintNode;
+import com.fbp.engine.connection.Connection;
+import com.fbp.engine.node.impl.GeneratorNode;
+import com.fbp.engine.node.impl.PrintNode;
 
 public class A1S404 {
     public static void main(String[] args) {

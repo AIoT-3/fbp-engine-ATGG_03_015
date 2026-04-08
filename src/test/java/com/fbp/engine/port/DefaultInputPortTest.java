@@ -1,6 +1,8 @@
-package com.fbp.engine.core;
+package com.fbp.engine.port;
 
 import com.fbp.engine.message.Message;
+import com.fbp.engine.node.Node;
+import com.fbp.engine.port.impl.DefaultInputPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

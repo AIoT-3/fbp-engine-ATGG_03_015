@@ -1,4 +1,4 @@
-package com.fbp.engine.core;
+package com.fbp.engine.connection;
 
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;

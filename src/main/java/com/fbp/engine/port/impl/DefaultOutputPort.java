@@ -1,14 +1,16 @@
-package com.fbp.engine.core;
+package com.fbp.engine.port.impl;
 
+import com.fbp.engine.connection.Connection;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.port.OutputPort;
 import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultOutputPort implements OutputPort{
-    private String name;
-    private List<Connection> connections;
+public class DefaultOutputPort implements OutputPort {
+    private final String name;
+    private final List<Connection> connections;
 
     public DefaultOutputPort(String name) {
         this.name = name;

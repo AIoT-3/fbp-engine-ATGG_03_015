@@ -1,7 +1,7 @@
-package com.fbp.engine.node;
+package com.fbp.engine.node.impl;
 
-import com.fbp.engine.core.*;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.node.AbstractNode;
 
 public class FilterNode extends AbstractNode {
     private String key;

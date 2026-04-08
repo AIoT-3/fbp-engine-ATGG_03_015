@@ -1,7 +1,7 @@
-package com.fbp.engine.node;
+package com.fbp.engine.node.impl;
 
-import com.fbp.engine.core.AbstractNode;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.node.AbstractNode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
