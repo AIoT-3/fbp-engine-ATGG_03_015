@@ -1,67 +1,66 @@
-package com.fbp.engine.runner;
+package com.fbp.engine.runner.stage1;
 
 import com.fbp.engine.edge.Connection;
 import com.fbp.engine.flow.Flow;
-import com.fbp.engine.node.impl.FilterNode;
-import com.fbp.engine.node.impl.LogNode;
 import com.fbp.engine.node.impl.PrintNode;
+import com.fbp.engine.node.impl.SplitNode;
 import com.fbp.engine.node.impl.TimerNode;
 
-public class A1S702 {
+public class A1S703 {
     private static volatile boolean running = true;
 
     public static void main(String[] args) {
         TimerNode timerNode = new TimerNode("timer", 1000);
-        LogNode logNode = new LogNode("logger");
-        FilterNode filterNode = new FilterNode("filter", "tick", 3);
-        PrintNode printNode = new PrintNode("printer");
+        SplitNode splitNode = new SplitNode("split", "tick", 3);
+        PrintNode matchPrinter = new PrintNode("matchPrinter");
+        PrintNode mismatchPrinter = new PrintNode("mismatchPrinter");
 
-        Flow flow = new Flow("timer-log-filter-print")
+        Flow flow = new Flow("timer-split-branch")
                 .addNode(timerNode)
-                .addNode(logNode)
-                .addNode(filterNode)
-                .addNode(printNode)
-                .connect("timer", "out", "logger", "in")
-                .connect("logger", "out", "filter", "in")
-                .connect("filter", "out", "printer", "in");
+                .addNode(splitNode)
+                .addNode(matchPrinter)
+                .addNode(mismatchPrinter)
+                .connect("timer", "out", "split", "in")
+                .connect("split", "match", "matchPrinter", "in")
+                .connect("split", "mismatch", "mismatchPrinter", "in");
 
         Connection connection1 = flow.getEdges().get(0).connection();
         Connection connection2 = flow.getEdges().get(1).connection();
         Connection connection3 = flow.getEdges().get(2).connection();
 
-        Thread logThread = new Thread(() -> {
+        Thread splitThread = new Thread(() -> {
             while (running || connection1.getBufferSize() > 0) {
                 try {
-                    logNode.process(connection1.poll());
+                    splitNode.process(connection1.poll());
                 } catch (IllegalStateException e) {
                     return;
                 }
             }
-        }, "log-thread");
+        }, "split-thread");
 
-        Thread filterThread = new Thread(() -> {
+        Thread matchThread = new Thread(() -> {
             while (running || connection2.getBufferSize() > 0) {
                 try {
-                    filterNode.process(connection2.poll());
+                    matchPrinter.process(connection2.poll());
                 } catch (IllegalStateException e) {
                     return;
                 }
             }
-        }, "filter-thread");
+        }, "match-thread");
 
-        Thread printThread = new Thread(() -> {
+        Thread mismatchThread = new Thread(() -> {
             while (running || connection3.getBufferSize() > 0) {
                 try {
-                    printNode.process(connection3.poll());
+                    mismatchPrinter.process(connection3.poll());
                 } catch (IllegalStateException e) {
                     return;
                 }
             }
-        }, "print-thread");
+        }, "mismatch-thread");
 
-        logThread.start();
-        filterThread.start();
-        printThread.start();
+        splitThread.start();
+        matchThread.start();
+        mismatchThread.start();
 
         flow.initialize();
 
@@ -73,14 +72,14 @@ public class A1S702 {
             running = false;
             flow.shutdown();
 
-            logThread.interrupt();
-            filterThread.interrupt();
-            printThread.interrupt();
+            splitThread.interrupt();
+            matchThread.interrupt();
+            mismatchThread.interrupt();
 
             try {
-                logThread.join();
-                filterThread.join();
-                printThread.join();
+                splitThread.join();
+                matchThread.join();
+                mismatchThread.join();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
