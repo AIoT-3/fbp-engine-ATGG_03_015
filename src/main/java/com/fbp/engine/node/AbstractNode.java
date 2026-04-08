@@ -29,7 +29,7 @@ public abstract class AbstractNode implements Node {
 
     @Override
     public void process(Message message) {
-        // 시끄러워서 주석 처리함
+        // 시끄러워서 임시 주석 처리함
         // log.info("[{}] ==> 전처리: {}", id, message);
         onProcess(message);
         // log.info("[{}] <== 후처리: {}", id, message);
@@ -45,20 +45,22 @@ public abstract class AbstractNode implements Node {
 
     }
 
+    @Override
+    public InputPort getInputPort(String name) {
+        return inputPorts.get(name);
+    }
+
+    @Override
+    public OutputPort getOutputPort(String name) {
+        return outputPorts.get(name);
+    }
+
     protected void addInputPort(String name) {
         inputPorts.put(name, new DefaultInputPort(name, this));
     }
 
     protected void addOutputPort(String name) {
         outputPorts.put(name, new DefaultOutputPort(name));
-    }
-
-    public InputPort getInputPort(String name) {
-        return inputPorts.get(name);
-    }
-
-    public OutputPort getOutputPort(String name) {
-        return outputPorts.get(name);
     }
 
     protected void send(String portName, Message message) {

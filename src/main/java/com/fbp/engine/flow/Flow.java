@@ -4,7 +4,7 @@ import com.fbp.engine.edge.Connection;
 import com.fbp.engine.edge.Edge;
 import com.fbp.engine.flow.validation.FlowValidator;
 import com.fbp.engine.flow.validation.FlowValidationSupport;
-import com.fbp.engine.node.AbstractNode;
+import com.fbp.engine.node.Node;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Map;
 @Getter
 public class Flow {
     private final String id;
-    private final Map<String, AbstractNode> nodes;
+    private final Map<String, Node> nodes;
     private final List<Edge> edges;
 
     public Flow(String id) {
@@ -24,7 +24,7 @@ public class Flow {
         this.edges = new ArrayList<>();
     }
 
-    public Flow addNode(AbstractNode node) {
+    public Flow addNode(Node node) {
         nodes.put(node.getId(), node);
         return this;
     }
@@ -36,8 +36,8 @@ public class Flow {
         FlowValidationSupport.validateNodeExists(nodes, targetNodeId);
 
         // 2. Port 검증
-        AbstractNode sourceNode = nodes.get(sourceNodeId);
-        AbstractNode targetNode = nodes.get(targetNodeId);
+        Node sourceNode = nodes.get(sourceNodeId);
+        Node targetNode = nodes.get(targetNodeId);
         FlowValidationSupport.validateOutputPortExists(sourceNode, sourcePort);
         FlowValidationSupport.validateInputPortExists(targetNode, targetPort);
 
@@ -50,13 +50,13 @@ public class Flow {
     }
 
     public void initialize() {
-        for (AbstractNode node : nodes.values()) {
+        for (Node node : nodes.values()) {
             node.initialize();
         }
     }
 
     public void shutdown() {
-        for (AbstractNode node : nodes.values()) {
+        for (Node node : nodes.values()) {
             node.shutdown();
         }
     }

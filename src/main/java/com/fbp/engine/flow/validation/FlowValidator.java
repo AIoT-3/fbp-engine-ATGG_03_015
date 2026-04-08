@@ -2,7 +2,7 @@ package com.fbp.engine.flow.validation;
 
 import com.fbp.engine.exception.EngineException;
 import com.fbp.engine.edge.Edge;
-import com.fbp.engine.node.AbstractNode;
+import com.fbp.engine.node.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class FlowValidator {
         /* This utility class should not be instantiated */
     }
 
-    public static List<String> validate(Map<String, AbstractNode> nodes, List<Edge> edges) {
+    public static List<String> validate(Map<String, Node> nodes, List<Edge> edges) {
         List<String> errors = new ArrayList<>();
 
         // 1. 노드 존재 여부 검증
