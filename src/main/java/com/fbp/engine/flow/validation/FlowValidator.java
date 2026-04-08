@@ -38,7 +38,7 @@ public class FlowValidator {
 
         // 3. 순환 참조 검증
         try {
-            FlowValidationSupport.validateNoCycles();
+            FlowValidationSupport.validateNoCycles(nodes, edges);
         } catch (EngineException e) {
             errors.add(e.getMessage());
         }
