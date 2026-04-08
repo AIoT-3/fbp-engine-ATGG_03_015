@@ -1,6 +1,8 @@
 package com.fbp.engine.flow;
 
 import com.fbp.engine.connection.Connection;
+import com.fbp.engine.flow.validation.FlowValidator;
+import com.fbp.engine.flow.validation.FlowValidationSupport;
 import com.fbp.engine.node.AbstractNode;
 import lombok.Getter;
 
@@ -13,12 +15,12 @@ import java.util.Map;
 public class Flow {
     private final String id;
     private final Map<String, AbstractNode> nodes;
-    private final List<Connection> connections;
+    private final List<FlowEdge> edges;
 
     public Flow(String id) {
         this.id = id;
         this.nodes = new HashMap<>();
-        this.connections = new ArrayList<>();
+        this.edges = new ArrayList<>();
     }
 
     public Flow addNode(AbstractNode node) {
@@ -27,19 +29,21 @@ public class Flow {
     }
 
     public Flow connect(String sourceNodeId, String sourcePort, String targetNodeId, String targetPort) {
+        // 1. Node 검증
+        FlowValidationSupport.validateFlowHasNodes(nodes);
+        FlowValidationSupport.validateNodeExists(nodes, sourceNodeId);
+        FlowValidationSupport.validateNodeExists(nodes, targetNodeId);
+
+        // 2. Port 검증
         AbstractNode sourceNode = nodes.get(sourceNodeId);
         AbstractNode targetNode = nodes.get(targetNodeId);
-        if (sourceNode == null
-                || targetNode == null
-                || sourceNode.getOutputPort(sourcePort) == null
-                || targetNode.getInputPort(targetPort) == null) {
-            throw new IllegalArgumentException("노드/포트가 없습니다");
-        }
+        FlowValidationSupport.validateOutputPortExists(sourceNode, sourcePort);
+        FlowValidationSupport.validateInputPortExists(targetNode, targetPort);
 
-        Connection connection = new Connection(
-                String.format("%s:%s->%s:%s", sourceNodeId, sourcePort, targetNodeId, targetPort));
+        // 3. Connection 생성, 연결, 등록
+        Connection connection = Connection.between(sourceNodeId, sourcePort, targetNodeId, targetPort);
         sourceNode.getOutputPort(sourcePort).connect(connection);
-        connections.add(connection);
+        edges.add(new FlowEdge(sourceNodeId, sourcePort, targetNodeId, targetPort, connection));
 
         return this;
     }
@@ -57,15 +61,6 @@ public class Flow {
     }
 
     public List<String> validate() {
-        List<String> errors = new ArrayList<>();
-
-        if (nodes.isEmpty()) {
-            errors.add("노드가 없습니다");
-        }
-        for (AbstractNode node : nodes.values()) {
-
-        }
-
-        return errors;
+        return FlowValidator.validate(nodes, edges);
     }
 }

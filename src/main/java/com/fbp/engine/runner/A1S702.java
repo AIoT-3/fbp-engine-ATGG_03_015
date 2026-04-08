@@ -25,9 +25,9 @@ public class A1S702 {
                 .connect("logger", "out", "filter", "in")
                 .connect("filter", "out", "printer", "in");
 
-        Connection connection1 = flow.getConnections().get(0);
-        Connection connection2 = flow.getConnections().get(1);
-        Connection connection3 = flow.getConnections().get(2);
+        Connection connection1 = flow.getEdges().get(0).connection();
+        Connection connection2 = flow.getEdges().get(1).connection();
+        Connection connection3 = flow.getEdges().get(2).connection();
 
         Thread logThread = new Thread(() -> {
             while (running || connection1.getBufferSize() > 0) {

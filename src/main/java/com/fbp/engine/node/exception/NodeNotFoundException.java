@@ -1,7 +1,9 @@
 package com.fbp.engine.node.exception;
 
-public class NodeNotFoundException extends RuntimeException {
-    public NodeNotFoundException() {
-        super("노드를 찾을 수 없습니다.");
+import com.fbp.engine.exception.EngineException;
+
+public class NodeNotFoundException extends EngineException {
+    public NodeNotFoundException(String id) {
+        super("노드를 찾을 수 없습니다: " + id);
     }
 }

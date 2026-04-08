@@ -24,9 +24,9 @@ public class A1S703 {
                 .connect("split", "match", "matchPrinter", "in")
                 .connect("split", "mismatch", "mismatchPrinter", "in");
 
-        Connection connection1 = flow.getConnections().get(0);
-        Connection connection2 = flow.getConnections().get(1);
-        Connection connection3 = flow.getConnections().get(2);
+        Connection connection1 = flow.getEdges().get(0).connection();
+        Connection connection2 = flow.getEdges().get(1).connection();
+        Connection connection3 = flow.getEdges().get(2).connection();
 
         Thread splitThread = new Thread(() -> {
             while (running || connection1.getBufferSize() > 0) {

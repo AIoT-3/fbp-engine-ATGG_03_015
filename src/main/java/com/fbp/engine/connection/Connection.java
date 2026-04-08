@@ -43,4 +43,14 @@ public class Connection {
     public int getBufferSize() {
         return buffer.size();
     }
+
+    public static Connection between(
+            String sourceNodeId,
+            String sourcePortName,
+            String targetNodeId,
+            String targetPortName
+    ) {
+        return new Connection(String.format("%s:%s->%s:%s",
+                sourceNodeId, sourcePortName, targetNodeId, targetPortName));
+    }
 }
