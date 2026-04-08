@@ -1,6 +1,6 @@
 package com.fbp.engine.runner;
 
-import com.fbp.engine.connection.Connection;
+import com.fbp.engine.edge.Connection;
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.node.impl.PrintNode;
 import com.fbp.engine.node.impl.SplitNode;

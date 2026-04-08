@@ -1,6 +1,6 @@
 package com.fbp.engine.node;
 
-import com.fbp.engine.connection.Connection;
+import com.fbp.engine.edge.Connection;
 import com.fbp.engine.port.InputPort;
 import com.fbp.engine.port.OutputPort;
 import com.fbp.engine.message.Message;

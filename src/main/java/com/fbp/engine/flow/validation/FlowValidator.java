@@ -1,7 +1,7 @@
 package com.fbp.engine.flow.validation;
 
 import com.fbp.engine.exception.EngineException;
-import com.fbp.engine.flow.FlowEdge;
+import com.fbp.engine.edge.Edge;
 import com.fbp.engine.node.AbstractNode;
 
 import java.util.ArrayList;
@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 public class FlowValidator {
+    private FlowValidator() {
+        /* This utility class should not be instantiated */
+    }
 
-    public static List<String> validate(Map<String, AbstractNode> nodes, List<FlowEdge> edges) {
+    public static List<String> validate(Map<String, AbstractNode> nodes, List<Edge> edges) {
         List<String> errors = new ArrayList<>();
 
         // 1. 노드 존재 여부 검증
@@ -22,7 +25,7 @@ public class FlowValidator {
         }
 
         // 2. 엣지 검증
-        for (FlowEdge edge : edges) {
+        for (Edge edge : edges) {
             try {
                 FlowValidationSupport.validateEdge(edge, nodes);
             } catch (EngineException e) {

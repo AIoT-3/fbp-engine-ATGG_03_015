@@ -1,8 +1,6 @@
-package com.fbp.engine.flow;
+package com.fbp.engine.edge;
 
-import com.fbp.engine.connection.Connection;
-
-public record FlowEdge(
+public record Edge(
         String sourceNodeId,
         String sourcePortName,
         String targetNodeId,

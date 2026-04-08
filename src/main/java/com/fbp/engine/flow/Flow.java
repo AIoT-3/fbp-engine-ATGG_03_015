@@ -1,6 +1,7 @@
 package com.fbp.engine.flow;
 
-import com.fbp.engine.connection.Connection;
+import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.Edge;
 import com.fbp.engine.flow.validation.FlowValidator;
 import com.fbp.engine.flow.validation.FlowValidationSupport;
 import com.fbp.engine.node.AbstractNode;
@@ -15,7 +16,7 @@ import java.util.Map;
 public class Flow {
     private final String id;
     private final Map<String, AbstractNode> nodes;
-    private final List<FlowEdge> edges;
+    private final List<Edge> edges;
 
     public Flow(String id) {
         this.id = id;
@@ -43,7 +44,7 @@ public class Flow {
         // 3. Connection 생성, 연결, 등록
         Connection connection = Connection.between(sourceNodeId, sourcePort, targetNodeId, targetPort);
         sourceNode.getOutputPort(sourcePort).connect(connection);
-        edges.add(new FlowEdge(sourceNodeId, sourcePort, targetNodeId, targetPort, connection));
+        edges.add(new Edge(sourceNodeId, sourcePort, targetNodeId, targetPort, connection));
 
         return this;
     }

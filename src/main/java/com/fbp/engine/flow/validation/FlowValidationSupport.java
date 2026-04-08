@@ -1,7 +1,7 @@
 package com.fbp.engine.flow.validation;
 
 import com.fbp.engine.flow.Flow;
-import com.fbp.engine.flow.FlowEdge;
+import com.fbp.engine.edge.Edge;
 import com.fbp.engine.flow.exception.EmptyFlowException;
 import com.fbp.engine.flow.exception.FlowNotFoundException;
 import com.fbp.engine.node.AbstractNode;
@@ -47,7 +47,7 @@ public class FlowValidationSupport {
         }
     }
 
-    public static void validateEdge(FlowEdge edge, Map<String, AbstractNode> nodes) {
+    public static void validateEdge(Edge edge, Map<String, AbstractNode> nodes) {
         validateNodeExists(nodes, edge.sourceNodeId());
         validateNodeExists(nodes, edge.targetNodeId());
         validateOutputPortExists(nodes.get(edge.sourceNodeId()), edge.sourcePortName());

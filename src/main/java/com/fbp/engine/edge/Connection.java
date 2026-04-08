@@ -1,4 +1,4 @@
-package com.fbp.engine.connection;
+package com.fbp.engine.edge;
 
 import com.fbp.engine.message.Message;
 import lombok.Getter;
