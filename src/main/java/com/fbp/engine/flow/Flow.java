@@ -62,6 +62,6 @@ public class Flow {
     }
 
     public List<String> validate() {
-        return FlowValidator.validate(nodes, edges);
+        return FlowValidator.validate(this);
     }
 }
