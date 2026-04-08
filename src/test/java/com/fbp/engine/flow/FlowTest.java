@@ -1,5 +1,6 @@
 package com.fbp.engine.flow;
 
+import com.fbp.engine.exception.EngineException;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.node.AbstractNode;
 import org.junit.jupiter.api.DisplayName;
@@ -67,7 +68,7 @@ class FlowTest {
         flow.addNode(targetNode);
 
         // When & Then
-        assertThrows(RuntimeException.class,
+        assertThrows(EngineException.class,
                 () -> flow.connect("source", "out", "target", "in"));
     }
 
@@ -80,7 +81,7 @@ class FlowTest {
         flow.addNode(sourceNode);
 
         // When & Then
-        assertThrows(RuntimeException.class,
+        assertThrows(EngineException.class,
                 () -> flow.connect("source", "out", "target", "in"));
     }
 
@@ -94,7 +95,7 @@ class FlowTest {
         flow.addNode(sourceNode).addNode(targetNode);
 
         // When & Then
-        assertThrows(RuntimeException.class,
+        assertThrows(EngineException.class,
                 () -> flow.connect("source", "없는포트", "target", "in"));
     }
 
@@ -108,7 +109,7 @@ class FlowTest {
         flow.addNode(sourceNode).addNode(targetNode);
 
         // When & Then
-        assertThrows(RuntimeException.class,
+        assertThrows(EngineException.class,
                 () -> flow.connect("source", "out", "target", "없는포트"));
     }
 
