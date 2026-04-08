@@ -1,6 +1,5 @@
-package com.fbp.engine.connection;
+package com.fbp.engine.edge;
 
-import com.fbp.engine.edge.Connection;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
