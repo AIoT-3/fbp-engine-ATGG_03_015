@@ -5,21 +5,28 @@ import com.fbp.engine.port.impl.DefaultOutputPort;
 import com.fbp.engine.port.InputPort;
 import com.fbp.engine.port.OutputPort;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
+import com.fbp.engine.node.exception.NodeInputDequeueException;
+import com.fbp.engine.node.exception.NodeInputEnqueueException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 public abstract class AbstractNode implements Node {
     private final String id;
     private final Map<String, InputPort> inputPorts;
     private final Map<String, OutputPort> outputPorts;
+    private final BlockingQueue<PortMessage> inbox;
 
     protected AbstractNode(String id) {
         this.id = id;
         this.inputPorts = new HashMap<>();
         this.outputPorts = new HashMap<>();
+        this.inbox = new LinkedBlockingQueue<>();
     }
 
     @Override
@@ -53,6 +60,26 @@ public abstract class AbstractNode implements Node {
     @Override
     public OutputPort getOutputPort(String name) {
         return outputPorts.get(name);
+    }
+
+    @Override
+    public void enqueueInput(String inputPortName, Message message) {
+        try {
+            inbox.put(new PortMessage(inputPortName, message));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new NodeInputEnqueueException(getId());
+        }
+    }
+
+    @Override
+    public PortMessage takeInput() {
+        try {
+            return inbox.take();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new NodeInputDequeueException(getId());
+        }
     }
 
     protected void addInputPort(String name) {
