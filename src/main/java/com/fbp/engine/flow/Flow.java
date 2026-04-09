@@ -6,6 +6,7 @@ import com.fbp.engine.flow.validation.FlowValidator;
 import com.fbp.engine.flow.validation.FlowValidationSupport;
 import com.fbp.engine.node.Node;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,10 +19,14 @@ public class Flow {
     private final Map<String, Node> nodes;
     private final List<Edge> edges;
 
+    @Setter
+    private FlowState state;
+
     public Flow(String id) {
         this.id = id;
         this.nodes = new HashMap<>();
         this.edges = new ArrayList<>();
+        this.state = FlowState.STOPPED;
     }
 
     public Flow addNode(Node node) {

@@ -966,7 +966,7 @@ executor.shutdown();  // 모든 작업 완료 후 종료
 > - `stop <id>` — 플로우 정지
 > - `exit` — 엔진 종료
 > - 예시:
-    >   ```
+>   ```
 >   fbp> list
 >   [1] monitoring  STOPPED
 >   fbp> start monitoring
