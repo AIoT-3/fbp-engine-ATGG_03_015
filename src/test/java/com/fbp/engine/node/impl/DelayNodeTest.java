@@ -1,8 +1,7 @@
-package com.fbp.engine.node;
+package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
 import com.fbp.engine.message.Message;
-import com.fbp.engine.node.impl.DelayNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

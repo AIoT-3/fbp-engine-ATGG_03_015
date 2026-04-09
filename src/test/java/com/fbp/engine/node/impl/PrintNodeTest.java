@@ -1,8 +1,9 @@
-package com.fbp.engine.node;
+package com.fbp.engine.node.impl;
 
+import com.fbp.engine.node.AbstractNode;
+import com.fbp.engine.node.Node;
 import com.fbp.engine.port.InputPort;
 import com.fbp.engine.message.Message;
-import com.fbp.engine.node.impl.PrintNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
