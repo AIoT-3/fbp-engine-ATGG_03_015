@@ -17,6 +17,6 @@ public class DefaultInputPort implements InputPort {
 
     @Override
     public void receive(Message message) {
-        owner.process(message);
+        owner.enqueueInput(name, message);
     }
 }
