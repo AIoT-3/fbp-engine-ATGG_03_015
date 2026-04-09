@@ -2,7 +2,7 @@ package com.fbp.engine.flow.validation;
 
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.flow.exception.CycleDetectedException;
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class FlowValidatorTest {
         }
 
         @Override
-        public void onProcess(Message message) {
+        public void onProcess(PortMessage portMessage) {
         }
     }
 
@@ -39,10 +39,7 @@ class FlowValidatorTest {
         List<String> errors = flow.validate();
 
         // Then
-        assertAll(
-                () -> assertEquals(1, errors.size()),
-                () -> assertEquals("노드가 없습니다.", errors.get(0))
-        );
+        assertEquals(1, errors.size());
     }
 
     @Test

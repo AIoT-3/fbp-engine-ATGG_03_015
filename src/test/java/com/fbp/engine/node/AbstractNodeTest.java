@@ -2,6 +2,7 @@ package com.fbp.engine.node;
 
 import com.fbp.engine.edge.Connection;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.port.InputPort;
 import com.fbp.engine.port.OutputPort;
 import org.junit.jupiter.api.DisplayName;
@@ -14,15 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class AbstractNodeTest {
 
     private static class TestNode extends AbstractNode {
-        private Message processedMessage;
+        private PortMessage processedMessage;
 
         public TestNode(String id) {
             super(id);
         }
 
         @Override
-        public void onProcess(Message message) {
-            this.processedMessage = message;
+        public void onProcess(PortMessage portMessage) {
+            this.processedMessage = portMessage;
         }
     }
 
@@ -87,10 +88,13 @@ class AbstractNodeTest {
         Message message = Message.of(Map.of("key", "value"));
 
         // When
-        node.process(message);
+        node.process(new PortMessage("in", message));
 
         // Then
-        assertEquals(message, node.processedMessage);
+        assertAll(
+                () -> assertEquals("in", node.processedMessage.inputPortName()),
+                () -> assertEquals(message, node.processedMessage.message())
+        );
     }
 
     @Test

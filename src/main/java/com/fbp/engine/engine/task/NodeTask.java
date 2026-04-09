@@ -11,7 +11,7 @@ public class NodeTask implements Runnable {
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                node.process(node.takeInput().message());
+                node.process(node.takeInput());
             }
         } catch (IllegalStateException e) {
             if (Thread.currentThread().isInterrupted()) {

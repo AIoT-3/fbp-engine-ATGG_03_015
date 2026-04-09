@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 
 public class SplitNode extends AbstractNode {
@@ -17,17 +17,17 @@ public class SplitNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
-        Object value = message.get(key);
+    public void onProcess(PortMessage portMessage) {
+        Object value = portMessage.message().get(key);
         if (!(value instanceof Number number)) {
             // 아 "패턴 변수"는 변수가 반드시 초기화되었다고 보장되는 경로에서만 보인다고
             // 이걸 판단하는 게 flow scoping이고
             return;
         }
         if (number.doubleValue() >= threshold) {
-            send("match", message);
+            send("match", portMessage.message());
         } else {
-            send("mismatch", message);
+            send("mismatch", portMessage.message());
         }
     }
 }

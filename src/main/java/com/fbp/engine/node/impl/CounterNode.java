@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,8 +15,8 @@ public class CounterNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
-        send("out", message.withEntry("count", ++count));
+    public void onProcess(PortMessage portMessage) {
+        send("out", portMessage.message().withEntry("count", ++count));
     }
 
     @Override

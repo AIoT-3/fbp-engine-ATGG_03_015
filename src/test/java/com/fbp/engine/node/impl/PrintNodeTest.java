@@ -4,6 +4,7 @@ import com.fbp.engine.node.AbstractNode;
 import com.fbp.engine.node.Node;
 import com.fbp.engine.port.InputPort;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ class PrintNodeTest {
         Message message = Message.of(Map.of("key", "value"));
 
         // When & Then
-        assertDoesNotThrow(() -> printNode.process(message));
+        assertDoesNotThrow(() -> printNode.process(new PortMessage("in", message)));
     }
 
     @Test

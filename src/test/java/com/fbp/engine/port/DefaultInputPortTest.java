@@ -31,7 +31,7 @@ class DefaultInputPortTest {
         inputPort.receive(message);
 
         // Then
-        then(owner).should().process(message);
+        then(owner).should().enqueueInput("testInputPort", message);
     }
 
     @Test

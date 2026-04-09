@@ -6,7 +6,7 @@ import com.fbp.engine.flow.Flow;
 import com.fbp.engine.flow.exception.CycleDetectedException;
 import com.fbp.engine.flow.exception.EmptyFlowException;
 import com.fbp.engine.flow.exception.FlowNotFoundException;
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 import com.fbp.engine.node.Node;
 import com.fbp.engine.node.exception.NodeNotFoundException;
@@ -34,7 +34,7 @@ class FlowValidationSupportTest {
         }
 
         @Override
-        public void onProcess(Message message) {
+        public void onProcess(PortMessage portMessage) {
         }
     }
 

@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,7 +13,7 @@ public class PrintNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
-        log.info("[{}] {}", this.getId(), message);
+    public void onProcess(PortMessage portMessage) {
+        log.info("[{}] {}", this.getId(), portMessage.message());
     }
 }

@@ -2,6 +2,7 @@ package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ class SplitNodeTest {
         splitNode.getOutputPort("match").connect(matchConnection);
 
         // When
-        splitNode.process(message);
+        splitNode.process(new PortMessage("in", message));
         Message result = matchConnection.poll();
 
         // Then
@@ -43,7 +44,7 @@ class SplitNodeTest {
         splitNode.getOutputPort("mismatch").connect(mismatchConnection);
 
         // When
-        splitNode.process(message);
+        splitNode.process(new PortMessage("in", message));
         Message result = mismatchConnection.poll();
 
         // Then
@@ -67,9 +68,9 @@ class SplitNodeTest {
         splitNode.getOutputPort("mismatch").connect(mismatchConnection);
 
         // When
-        splitNode.process(matchMessage);
+        splitNode.process(new PortMessage("in", matchMessage));
         Message matchResult = matchConnection.poll();
-        splitNode.process(mismatchMessage);
+        splitNode.process(new PortMessage("in", mismatchMessage));
         Message mismatchResult = mismatchConnection.poll();
 
         // Then
@@ -92,7 +93,7 @@ class SplitNodeTest {
         splitNode.getOutputPort("match").connect(matchConnection);
 
         // When
-        splitNode.process(message);
+        splitNode.process(new PortMessage("in", message));
         Message result = matchConnection.poll();
 
         // Then

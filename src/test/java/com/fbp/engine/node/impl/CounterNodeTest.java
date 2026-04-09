@@ -2,6 +2,7 @@ package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ class CounterNodeTest {
         counterNode.getOutputPort("out").connect(connection);
 
         // When & Then
-        counterNode.process(message);
+        counterNode.process(new PortMessage("in", message));
         assertAll(
                 () -> assertEquals((Integer) 1, connection.poll().get("count")),
                 () -> assertEquals("testValue", message.get("testKey"))
@@ -42,7 +43,7 @@ class CounterNodeTest {
 
         // When & Then
         for (AtomicInteger i = new AtomicInteger(1); i.get() <= 3; i.incrementAndGet()) {
-            counterNode.process(message);
+            counterNode.process(new PortMessage("in", message));
             assertAll(
                     () -> assertEquals((Integer) i.get(), connection.poll().get("count")),
                     () -> assertEquals("testValue", message.get("testKey"))

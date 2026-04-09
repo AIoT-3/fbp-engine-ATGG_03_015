@@ -2,6 +2,7 @@ package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ class HumiditySensorNodeTest {
         humiditySensorNode.getOutputPort("out").connect(connection);
 
         // When
-        humiditySensorNode.process(Message.of(Map.of()));
+        humiditySensorNode.process(new PortMessage("trigger", Message.of(Map.of())));
         Message result = connection.poll();
         Double humidity = result.get("humidity");
 
@@ -43,9 +44,9 @@ class HumiditySensorNodeTest {
         humiditySensorNode.getOutputPort("out").connect(connection);
 
         // When
-        humiditySensorNode.process(Message.of(Map.of()));
-        humiditySensorNode.process(Message.of(Map.of()));
-        humiditySensorNode.process(Message.of(Map.of()));
+        humiditySensorNode.process(new PortMessage("trigger", Message.of(Map.of())));
+        humiditySensorNode.process(new PortMessage("trigger", Message.of(Map.of())));
+        humiditySensorNode.process(new PortMessage("trigger", Message.of(Map.of())));
 
         // Then
         assertEquals(3, connection.getBufferSize());

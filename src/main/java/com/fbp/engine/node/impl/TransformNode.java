@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 
 import java.util.function.Function;
@@ -16,8 +17,8 @@ public class TransformNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
-        Message result = transformer.apply(message);
+    public void onProcess(PortMessage portMessage) {
+        Message result = transformer.apply(portMessage.message());
         if (result != null) {
             send("out", result);
         }

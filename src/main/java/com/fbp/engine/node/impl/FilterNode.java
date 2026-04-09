@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 
 public class FilterNode extends AbstractNode {
@@ -16,10 +16,10 @@ public class FilterNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
-        Object value = message.get(key);
+    public void onProcess(PortMessage portMessage) {
+        Object value = portMessage.message().get(key);
         if (value instanceof Number number && number.doubleValue() >= threshold) {
-            getOutputPort("out").send(message);
+            getOutputPort("out").send(portMessage.message());
         }
     }
 }

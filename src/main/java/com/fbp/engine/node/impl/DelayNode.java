@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 
 public class DelayNode extends AbstractNode {
@@ -14,10 +14,10 @@ public class DelayNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
+    public void onProcess(PortMessage portMessage) {
         try {
             Thread.sleep(delayMs);
-            send("out", message);
+            send("out", portMessage.message());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

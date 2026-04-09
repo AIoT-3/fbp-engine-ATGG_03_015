@@ -2,6 +2,7 @@ package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,7 @@ class TransformNodeTest {
         transformNode.getOutputPort("out").connect(connection);
 
         // When
-        transformNode.process(inputMessage);
+        transformNode.process(new PortMessage("in", inputMessage));
         Message result = connection.poll();
 
         // Then
@@ -45,7 +46,7 @@ class TransformNodeTest {
         transformNode.getOutputPort("out").connect(connection);
 
         // When
-        transformNode.process(inputMessage);
+        transformNode.process(new PortMessage("in", inputMessage));
         int bufferSize = connection.getBufferSize();
 
         // Then

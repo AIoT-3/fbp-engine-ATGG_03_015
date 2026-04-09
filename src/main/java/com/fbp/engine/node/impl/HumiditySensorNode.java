@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 
 import java.util.Map;
@@ -18,7 +19,7 @@ public class HumiditySensorNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
+    public void onProcess(PortMessage portMessage) {
         double randomHumidity = min + Math.random() * (max - min);
         Message outputMessage = Message.of(Map.of(
                 "sensorId", getId(),

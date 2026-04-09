@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 
 import java.io.BufferedWriter;
@@ -27,13 +27,13 @@ public class FileWriterNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
+    public void onProcess(PortMessage portMessage) {
         if (writer == null) {
             throw new IllegalStateException("파일 writer가 초기화되지 않았습니다.");
         }
 
         try {
-            writer.write(message.toString());
+            writer.write(portMessage.message().toString());
             writer.newLine();
             writer.flush();
         } catch (IOException e) {

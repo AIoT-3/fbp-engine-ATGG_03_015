@@ -2,6 +2,7 @@ package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,7 @@ class LogNodeTest {
         Message message = Message.of(Map.of("key", "value"));
 
         // When
-        logNode.process(message);
+        logNode.process(new PortMessage("in", message));
         Message result = connection.poll();
 
         // Then

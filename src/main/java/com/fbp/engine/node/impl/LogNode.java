@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,8 +17,8 @@ public class LogNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
-        log.info("[{}][{}] {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")), this.getId(), message);
-        send("out", message);
+    public void onProcess(PortMessage portMessage) {
+        log.info("[{}][{}] {}", LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")), this.getId(), portMessage.message());
+        send("out", portMessage.message());
     }
 }

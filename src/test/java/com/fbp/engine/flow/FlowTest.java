@@ -1,7 +1,7 @@
 package com.fbp.engine.flow;
 
 import com.fbp.engine.exception.EngineException;
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class FlowTest {
         }
 
         @Override
-        public void onProcess(Message message) {
+        public void onProcess(PortMessage portMessage) {
         }
     }
 

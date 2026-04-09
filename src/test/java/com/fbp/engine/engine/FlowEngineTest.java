@@ -4,6 +4,7 @@ import com.fbp.engine.flow.Flow;
 import com.fbp.engine.flow.FlowState;
 import com.fbp.engine.flow.exception.FlowNotFoundException;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class FlowEngineTest {
         }
 
         @Override
-        public void onProcess(Message message) {
+        public void onProcess(PortMessage portMessage) {
         }
     }
 
@@ -56,7 +57,7 @@ class FlowEngineTest {
         }
 
         @Override
-        public void onProcess(Message message) {
+        public void onProcess(PortMessage portMessage) {
             processCount.incrementAndGet();
             if (processLatch != null) {
                 processLatch.countDown();
@@ -77,8 +78,8 @@ class FlowEngineTest {
         // Then
         assertAll(
                 () -> assertEquals(EngineState.INITIALIZED, flowEngine.getState()),
-                () -> assertTrue(flowEngine.getFlows().containsKey("test-flow")),
-                () -> assertSame(flow, flowEngine.getFlows().get("test-flow"))
+                () -> assertTrue(flowEngine.getRuntimes().containsKey("test-flow")),
+                () -> assertSame(flow, flowEngine.getRuntimes().get("test-flow").getFlow())
         );
     }
 
@@ -104,7 +105,7 @@ class FlowEngineTest {
                 () -> assertTrue(processed),
                 () -> assertEquals(EngineState.STOPPED, flowEngine.getState()),
                 () -> assertEquals(FlowState.STOPPED, flow.getState()),
-                () -> assertFalse(flowEngine.getFlowTasks().containsKey("test-flow"))
+                () -> assertTrue(flowEngine.getRuntimes().get("test-flow").getTasks().isEmpty())
         );
     }
 
@@ -133,7 +134,7 @@ class FlowEngineTest {
         assertAll(
                 () -> assertEquals(EngineState.INITIALIZED, flowEngine.getState()),
                 () -> assertEquals(FlowState.STOPPED, flow.getState()),
-                () -> assertFalse(flowEngine.getFlowTasks().containsKey("invalid-flow"))
+                () -> assertTrue(flowEngine.getRuntimes().get("invalid-flow").getTasks().isEmpty())
         );
     }
 
@@ -158,7 +159,7 @@ class FlowEngineTest {
                 () -> assertEquals(EngineState.STOPPED, flowEngine.getState()),
                 () -> assertEquals(FlowState.STOPPED, flow.getState()),
                 () -> assertTrue(sinkNode.shutdownCalled),
-                () -> assertTrue(flowEngine.getFlowTasks().isEmpty())
+                () -> assertTrue(flowEngine.getRuntimes().isEmpty())
         );
     }
 

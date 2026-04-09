@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.port.InputPort;
 import com.fbp.engine.port.OutputPort;
 import com.fbp.engine.message.Message;
@@ -30,7 +31,7 @@ class FilterNodeTest {
         Message message = Message.of(Map.of("value", 15.0));
 
         // When
-        filterNode.process(message);
+        filterNode.process(new PortMessage("in", message));
 
         // Then
         then(mockConnection).should().deliver(message);
@@ -45,7 +46,7 @@ class FilterNodeTest {
         Message message = Message.of(Map.of("value", 5.0));
 
         // When
-        filterNode.process(message);
+        filterNode.process(new PortMessage("in", message));
 
         // Then
         then(mockConnection).shouldHaveNoInteractions();
@@ -60,7 +61,7 @@ class FilterNodeTest {
         Message message = Message.of(Map.of("value", 10.0));
 
         // When
-        filterNode.process(message);
+        filterNode.process(new PortMessage("in", message));
 
         // Then
         then(mockConnection).should().deliver(message);
@@ -75,7 +76,7 @@ class FilterNodeTest {
         Message message = Message.of(Map.of("otherKey", 15.0));
 
         // When & Then
-        assertDoesNotThrow(() -> filterNode.process(message));
+        assertDoesNotThrow(() -> filterNode.process(new PortMessage("in", message)));
         then(mockConnection).shouldHaveNoInteractions();
     }
 

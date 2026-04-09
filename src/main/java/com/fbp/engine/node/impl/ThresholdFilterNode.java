@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 
 public class ThresholdFilterNode extends AbstractNode {
@@ -17,16 +17,16 @@ public class ThresholdFilterNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
-        Object value = message.get(fieldName);
+    public void onProcess(PortMessage portMessage) {
+        Object value = portMessage.message().get(fieldName);
         if (!(value instanceof Number number)) {
             return;
         }
 
         if (number.doubleValue() > threshold) {
-            send("alert", message);
+            send("alert", portMessage.message());
         } else {
-            send("normal", message);
+            send("normal", portMessage.message());
         }
     }
 }

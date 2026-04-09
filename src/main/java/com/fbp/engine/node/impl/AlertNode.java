@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.message.Message;
+import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,9 +15,9 @@ public class AlertNode extends AbstractNode {
     }
 
     @Override
-    public void onProcess(Message message) {
-        String sensorId = message.get(SENSOR_ID);
-        Double temperature = message.get(TEMPERATURE);
+    public void onProcess(PortMessage portMessage) {
+        String sensorId = portMessage.message().get(SENSOR_ID);
+        Double temperature = portMessage.message().get(TEMPERATURE);
 
         if (sensorId == null || sensorId.isBlank() || temperature == null) {
             log.warn("[경고] 알 수 없는 센서 데이터");

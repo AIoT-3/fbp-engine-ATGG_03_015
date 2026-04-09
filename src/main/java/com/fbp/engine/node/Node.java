@@ -7,7 +7,7 @@ import com.fbp.engine.port.OutputPort;
 
 public interface Node {
     String getId();
-    void process(Message message);
+    void process(PortMessage portMessage);
     void initialize();
     void shutdown();
     InputPort getInputPort(String name);

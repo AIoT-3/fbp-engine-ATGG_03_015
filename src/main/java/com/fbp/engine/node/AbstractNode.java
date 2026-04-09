@@ -35,10 +35,10 @@ public abstract class AbstractNode implements Node {
     }
 
     @Override
-    public void process(Message message) {
+    public void process(PortMessage portMessage) {
         // 시끄러워서 임시 주석 처리함
         // log.info("[{}] ==> 전처리: {}", id, message);
-        onProcess(message);
+        onProcess(portMessage);
         // log.info("[{}] <== 후처리: {}", id, message);
     }
 
@@ -97,5 +97,5 @@ public abstract class AbstractNode implements Node {
         }
     }
 
-    public abstract void onProcess(Message message);
+    public abstract void onProcess(PortMessage portMessage);
 }
