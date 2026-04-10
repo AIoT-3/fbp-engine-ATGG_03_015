@@ -1,7 +1,7 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.edge.Connection;
-import com.fbp.engine.edge.LocalConnection;
+import com.fbp.engine.edge.connection.Connection;
+import com.fbp.engine.edge.connection.LocalConnection;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

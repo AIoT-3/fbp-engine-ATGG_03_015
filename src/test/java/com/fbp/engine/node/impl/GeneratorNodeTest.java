@@ -1,6 +1,6 @@
 package com.fbp.engine.node.impl;
 
-import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.connection.Connection;
 import com.fbp.engine.port.OutputPort;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;

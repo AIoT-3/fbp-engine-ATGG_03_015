@@ -1,7 +1,7 @@
 package com.fbp.engine.flow.validation;
 
 import com.fbp.engine.edge.Edge;
-import com.fbp.engine.edge.LocalConnection;
+import com.fbp.engine.edge.connection.LocalConnection;
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.flow.exception.CycleDetectedException;
 import com.fbp.engine.flow.exception.EmptyFlowException;

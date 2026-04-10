@@ -1,4 +1,4 @@
-package com.fbp.engine.edge;
+package com.fbp.engine.edge.connection;
 
 import com.fbp.engine.edge.exception.ConnectionDeliveryException;
 import com.fbp.engine.edge.exception.ConnectionPollException;

@@ -1,4 +1,4 @@
-package com.fbp.engine.edge;
+package com.fbp.engine.edge.connection;
 
 import com.fbp.engine.message.Message;
 

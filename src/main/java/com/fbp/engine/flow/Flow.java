@@ -1,8 +1,8 @@
 package com.fbp.engine.flow;
 
-import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.connection.Connection;
 import com.fbp.engine.edge.Edge;
-import com.fbp.engine.edge.LocalConnection;
+import com.fbp.engine.edge.connection.LocalConnection;
 import com.fbp.engine.flow.validation.FlowValidator;
 import com.fbp.engine.flow.validation.FlowValidationSupport;
 import com.fbp.engine.node.Node;
