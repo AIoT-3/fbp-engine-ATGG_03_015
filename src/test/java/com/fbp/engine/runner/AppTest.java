@@ -1,9 +1,8 @@
 package com.fbp.engine.runner;
 
-import com.fbp.engine.engine.EngineState;
+import com.fbp.engine.engine.FlowEngineState;
 import com.fbp.engine.engine.FlowEngine;
 import com.fbp.engine.flow.Flow;
-import com.fbp.engine.flow.FlowState;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.node.impl.CollectorNode;
 import com.fbp.engine.node.impl.FileWriterNode;
@@ -68,8 +67,8 @@ class AppTest {
 
         // Then
         assertAll(
-                () -> assertEquals(EngineState.STOPPED, flowEngine.getState()),
-                () -> assertEquals(FlowState.STOPPED, flow.getState()),
+                () -> assertEquals(FlowEngineState.STOPPED, flowEngine.getState()),
+                () -> assertTrue(flowEngine.getRuntimes().isEmpty()),
                 () -> assertTrue(alertMessages.stream().allMatch(message -> ((Double) message.get("temperature")) > 30.0)),
                 () -> assertTrue(normalMessages.stream().allMatch(message -> ((Double) message.get("temperature")) <= 30.0)),
                 () -> assertEquals(sensorMessages.size(), alertMessages.size() + normalMessages.size()),

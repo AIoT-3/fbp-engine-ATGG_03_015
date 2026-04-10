@@ -1,8 +1,9 @@
 package com.fbp.engine.engine;
 
-import com.fbp.engine.flow.Flow;
-import com.fbp.engine.flow.FlowState;
+import com.fbp.engine.engine.exception.FlowTaskExecutionException;
+import com.fbp.engine.flow.runtime.FlowRuntimeState;
 import com.fbp.engine.flow.exception.FlowNotFoundException;
+import com.fbp.engine.flow.Flow;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BooleanSupplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,6 +67,24 @@ class FlowEngineTest {
         }
     }
 
+    private static class FailingSinkNode extends AbstractNode {
+        private final CountDownLatch processLatch;
+
+        private FailingSinkNode(String id, CountDownLatch processLatch) {
+            super(id);
+            this.processLatch = processLatch;
+            addInputPort("in");
+        }
+
+        @Override
+        public void onProcess(PortMessage portMessage) {
+            if (processLatch != null) {
+                processLatch.countDown();
+            }
+            throw new IllegalStateException("node processing failed");
+        }
+    }
+
     @Test
     @DisplayName("생성/register: 초기 상태가 INITIALIZED이고 플로우 등록이 되는지(1)(2)")
     void testConstructorAndRegister() {
@@ -77,7 +97,7 @@ class FlowEngineTest {
 
         // Then
         assertAll(
-                () -> assertEquals(EngineState.INITIALIZED, flowEngine.getState()),
+                () -> assertEquals(FlowEngineState.INITIALIZED, flowEngine.getState()),
                 () -> assertTrue(flowEngine.getRuntimes().containsKey("test-flow")),
                 () -> assertSame(flow, flowEngine.getRuntimes().get("test-flow").getFlow())
         );
@@ -103,9 +123,9 @@ class FlowEngineTest {
         // Then
         assertAll(
                 () -> assertTrue(processed),
-                () -> assertEquals(EngineState.STOPPED, flowEngine.getState()),
-                () -> assertEquals(FlowState.STOPPED, flow.getState()),
-                () -> assertTrue(flowEngine.getRuntimes().get("test-flow").getTasks().isEmpty())
+                () -> assertEquals(FlowEngineState.STOPPED, flowEngine.getState()),
+                () -> assertEquals(FlowRuntimeState.STOPPED, flowEngine.getRuntimes().get("test-flow").getState()),
+                () -> assertFalse(flowEngine.getRuntimes().get("test-flow").hasActiveExecution())
         );
     }
 
@@ -132,9 +152,9 @@ class FlowEngineTest {
 
         // Then
         assertAll(
-                () -> assertEquals(EngineState.INITIALIZED, flowEngine.getState()),
-                () -> assertEquals(FlowState.STOPPED, flow.getState()),
-                () -> assertTrue(flowEngine.getRuntimes().get("invalid-flow").getTasks().isEmpty())
+                () -> assertEquals(FlowEngineState.INITIALIZED, flowEngine.getState()),
+                () -> assertEquals(FlowRuntimeState.READY, flowEngine.getRuntimes().get("invalid-flow").getState()),
+                () -> assertFalse(flowEngine.getRuntimes().get("invalid-flow").hasActiveExecution())
         );
     }
 
@@ -156,8 +176,7 @@ class FlowEngineTest {
 
         // Then
         assertAll(
-                () -> assertEquals(EngineState.STOPPED, flowEngine.getState()),
-                () -> assertEquals(FlowState.STOPPED, flow.getState()),
+                () -> assertEquals(FlowEngineState.STOPPED, flowEngine.getState()),
                 () -> assertTrue(sinkNode.shutdownCalled),
                 () -> assertTrue(flowEngine.getRuntimes().isEmpty())
         );
@@ -186,9 +205,9 @@ class FlowEngineTest {
 
         // Then
         assertAll(
-                () -> assertEquals(FlowState.STOPPED, flowA.getState()),
-                () -> assertEquals(FlowState.RUNNING, flowB.getState()),
-                () -> assertEquals(EngineState.RUNNING, flowEngine.getState())
+                () -> assertEquals(FlowRuntimeState.STOPPED, flowEngine.getRuntimes().get("flowA").getState()),
+                () -> assertEquals(FlowRuntimeState.RUNNING, flowEngine.getRuntimes().get("flowB").getState()),
+                () -> assertEquals(FlowEngineState.RUNNING, flowEngine.getState())
         );
 
         flowEngine.shutdown();
@@ -204,5 +223,49 @@ class FlowEngineTest {
 
         // When & Then
         assertDoesNotThrow(flowEngine::listFlows);
+    }
+
+    @Test
+    @DisplayName("task 실패: 런타임이 FAILED로 전이되고 원인을 보관하는지(10)")
+    void testRuntimeFailureState() throws InterruptedException {
+        // Given
+        FlowEngine flowEngine = new FlowEngine();
+        CountDownLatch processLatch = new CountDownLatch(1);
+        Flow flow = new Flow("failed-flow")
+                .addNode(new SourceNode("source", null))
+                .addNode(new FailingSinkNode("sink", processLatch))
+                .connect("source", "out", "sink", "in");
+        flowEngine.register(flow);
+
+        // When
+        flowEngine.startFlow("failed-flow");
+        boolean processed = processLatch.await(1, TimeUnit.SECONDS);
+        boolean failed = waitUntil(() -> flowEngine.getRuntimes().get("failed-flow").getState() == FlowRuntimeState.FAILED,
+                1, TimeUnit.SECONDS);
+
+        // Then
+        assertAll(
+                () -> assertTrue(processed),
+                () -> assertTrue(failed),
+                () -> assertEquals(FlowRuntimeState.FAILED, flowEngine.getRuntimes().get("failed-flow").getState()),
+                () -> assertInstanceOf(FlowTaskExecutionException.class,
+                        flowEngine.getRuntimes().get("failed-flow").getLastFailure()),
+                () -> assertInstanceOf(IllegalStateException.class,
+                        flowEngine.getRuntimes().get("failed-flow").getLastFailure().getCause()),
+                () -> assertEquals(FlowEngineState.STOPPED, flowEngine.getState())
+        );
+
+        flowEngine.shutdown();
+    }
+
+    private boolean waitUntil(BooleanSupplier condition, long timeout, TimeUnit unit) throws InterruptedException {
+        long deadline = System.nanoTime() + unit.toNanos(timeout);
+        while (System.nanoTime() < deadline) {
+            if (condition.getAsBoolean()) {
+                return true;
+            }
+            Thread.sleep(10);
+        }
+        return condition.getAsBoolean();
     }
 }

@@ -114,24 +114,23 @@ class FlowTest {
     }
 
     @Test
-    @DisplayName("initialize/shutdown: 전체 노드 initialize, shutdown 호출(10)(11)")
-    void testInitializeAndShutdown() {
+    @DisplayName("정의 객체: 등록한 노드와 연결 정보를 그대로 보유하는지(10)(11)")
+    void testFlowKeepsDefinition() {
         // Given
         Flow flow = new Flow("test-flow");
         TestNode sourceNode = new TestNode("source", false, true);
         TestNode targetNode = new TestNode("target", true, false);
-        flow.addNode(sourceNode).addNode(targetNode);
-
-        // When
-        flow.initialize();
-        flow.shutdown();
+        flow.addNode(sourceNode)
+                .addNode(targetNode)
+                .connect("source", "out", "target", "in");
 
         // Then
         assertAll(
-                () -> assertTrue(sourceNode.initialized),
-                () -> assertTrue(targetNode.initialized),
-                () -> assertTrue(sourceNode.shutdown),
-                () -> assertTrue(targetNode.shutdown)
+                () -> assertSame(sourceNode, flow.getNodes().get("source")),
+                () -> assertSame(targetNode, flow.getNodes().get("target")),
+                () -> assertEquals(1, flow.getEdges().size()),
+                () -> assertEquals("source", flow.getEdges().getFirst().sourceNodeId()),
+                () -> assertEquals("target", flow.getEdges().getFirst().targetNodeId())
         );
     }
 }
