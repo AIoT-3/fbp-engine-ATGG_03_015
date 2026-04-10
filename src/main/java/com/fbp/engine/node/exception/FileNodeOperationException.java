@@ -3,11 +3,11 @@ package com.fbp.engine.node.exception;
 import com.fbp.engine.exception.EngineException;
 
 public class FileNodeOperationException extends EngineException {
-    public FileNodeOperationException(String message) {
-        super(message);
+    public FileNodeOperationException() {
+        super("파일 노드에서 문제가 발생했습니다");
     }
 
     public FileNodeOperationException(String message, Throwable cause) {
-        super(message, cause);
+        super("파일 노드에서 문제가 발생했습니다: " + message, cause);
     }
 }
