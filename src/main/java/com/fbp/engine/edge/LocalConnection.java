@@ -1,5 +1,7 @@
 package com.fbp.engine.edge;
 
+import com.fbp.engine.edge.exception.ConnectionDeliveryException;
+import com.fbp.engine.edge.exception.ConnectionPollException;
 import com.fbp.engine.message.Message;
 import lombok.Getter;
 
@@ -28,7 +30,7 @@ public class LocalConnection implements Connection {
             buffer.put(message);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new IllegalStateException("메시지 전달 중 인터럽트 발생", e);
+            throw new ConnectionDeliveryException(id, e);
         }
     }
 
@@ -38,7 +40,7 @@ public class LocalConnection implements Connection {
             return buffer.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new IllegalStateException("메시지 폴링 중 인터럽트 발생", e);
+            throw new ConnectionPollException(id, e);
         }
     }
 
