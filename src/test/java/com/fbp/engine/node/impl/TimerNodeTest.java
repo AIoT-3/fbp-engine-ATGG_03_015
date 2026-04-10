@@ -3,12 +3,23 @@ package com.fbp.engine.node.impl;
 import com.fbp.engine.edge.connection.Connection;
 import com.fbp.engine.edge.connection.LocalConnection;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.node.NodeExecutionMode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TimerNodeTest {
+
+    @Test
+    @DisplayName("executionMode: TimerNode는 SELF_DRIVEN인지(0)")
+    void testExecutionMode() {
+        // Given
+        TimerNode timerNode = new TimerNode("timerNode1", 100);
+
+        // When & Then
+        assertEquals(NodeExecutionMode.SELF_DRIVEN, timerNode.executionMode());
+    }
 
     @Test
     @DisplayName("initialize: 호출 후 일정 시간 대기하면 메시지가 OutputPort로 전달되는지(1)")

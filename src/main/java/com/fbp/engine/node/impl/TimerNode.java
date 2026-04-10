@@ -3,6 +3,7 @@ package com.fbp.engine.node.impl;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
+import com.fbp.engine.node.NodeExecutionMode;
 
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -18,6 +19,11 @@ public class TimerNode extends AbstractNode {
         super(id);
         this.intervalMs = intervalMs;
         addOutputPort("out");
+    }
+
+    @Override
+    public NodeExecutionMode executionMode() {
+        return NodeExecutionMode.SELF_DRIVEN;
     }
 
     @Override

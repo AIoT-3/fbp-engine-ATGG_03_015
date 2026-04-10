@@ -4,6 +4,7 @@ import com.fbp.engine.edge.Edge;
 import com.fbp.engine.edge.runtime.WireRuntime;
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.node.Node;
+import com.fbp.engine.node.NodeExecutionMode;
 import com.fbp.engine.port.InputPort;
 
 import java.util.ArrayList;
@@ -17,7 +18,9 @@ public class FlowTaskFactory {
     public static FlowTasks createTasks(Flow flow) {
         List<NodeTask> nodeTasks = new ArrayList<>();
         for (Node node : flow.getNodes().values()) {
-            nodeTasks.add(new NodeTask(node));
+            if (node.executionMode() == NodeExecutionMode.POLLING) {
+                nodeTasks.add(new NodeTask(node));
+            }
         }
 
         List<EdgeDispatchTask> edgeDispatchTasks = new ArrayList<>();

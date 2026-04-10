@@ -116,4 +116,14 @@ class AbstractNodeTest {
         assertEquals(message, receivedMessage);
     }
 
+    @Test
+    @DisplayName("executionMode: 기본 실행 전략은 POLLING인지(7)")
+    void testDefaultExecutionMode() {
+        // Given
+        TestNode node = new TestNode("testNode1");
+
+        // When & Then
+        assertEquals(NodeExecutionMode.POLLING, node.executionMode());
+    }
+
 }

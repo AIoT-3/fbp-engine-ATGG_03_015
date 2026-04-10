@@ -10,6 +10,9 @@ public interface Node {
     void process(PortMessage portMessage);
     void initialize();
     void shutdown();
+    default NodeExecutionMode executionMode() {
+        return NodeExecutionMode.POLLING;
+    }
     InputPort getInputPort(String name);
     OutputPort getOutputPort(String name);
     void enqueueInput(String inputPortName, Message message);
