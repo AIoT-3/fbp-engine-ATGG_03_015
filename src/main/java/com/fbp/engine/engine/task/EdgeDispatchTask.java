@@ -1,28 +1,24 @@
 package com.fbp.engine.engine.task;
 
-import com.fbp.engine.edge.Edge;
-import com.fbp.engine.flow.Flow;
+import com.fbp.engine.edge.connection.WireRuntime;
+import com.fbp.engine.exception.EngineException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class EdgeDispatchTask implements Runnable {
-    private final Flow flow;
-    private final Edge edge;
+    private final WireRuntime wireRuntime;
 
     @Override
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                flow.getNodes()
-                        .get(edge.targetNodeId())
-                        .getInputPort(edge.targetPortName())
-                        .receive(edge.connection().poll());
+                wireRuntime.dispatch();
             }
-        } catch (IllegalStateException e) {
+        } catch (EngineException exception) {
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
-            throw e;
+            throw exception;
         }
     }
 }

@@ -1,11 +1,13 @@
 package com.fbp.engine.engine;
 
 import com.fbp.engine.edge.Edge;
+import com.fbp.engine.edge.connection.WireRuntime;
 import com.fbp.engine.engine.task.EdgeDispatchTask;
 import com.fbp.engine.engine.task.FlowTasks;
 import com.fbp.engine.engine.task.NodeTask;
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.node.Node;
+import com.fbp.engine.port.InputPort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,10 @@ public class FlowTaskFactory {
 
         List<EdgeDispatchTask> edgeDispatchTasks = new ArrayList<>();
         for (Edge edge : flow.getEdges()) {
-            edgeDispatchTasks.add(new EdgeDispatchTask(flow, edge));
+            InputPort targetInputPort = flow.getNodes()
+                    .get(edge.targetNodeId())
+                    .getInputPort(edge.targetPortName());
+            edgeDispatchTasks.add(new EdgeDispatchTask(new WireRuntime(edge, targetInputPort)));
         }
 
         return new FlowTasks(nodeTasks, edgeDispatchTasks);

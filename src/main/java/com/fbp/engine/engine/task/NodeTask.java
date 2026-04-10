@@ -1,5 +1,6 @@
 package com.fbp.engine.engine.task;
 
+import com.fbp.engine.exception.EngineException;
 import com.fbp.engine.node.Node;
 import lombok.RequiredArgsConstructor;
 
@@ -13,11 +14,11 @@ public class NodeTask implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 node.process(node.takeInput());
             }
-        } catch (IllegalStateException e) {
+        } catch (EngineException exception) {
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
-            throw e;
+            throw exception;
         }
     }
 }
