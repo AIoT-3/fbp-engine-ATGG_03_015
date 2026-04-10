@@ -3,6 +3,7 @@ package com.fbp.engine.engine.task;
 import com.fbp.engine.edge.Edge;
 import com.fbp.engine.edge.runtime.WireRuntime;
 import com.fbp.engine.flow.Flow;
+import com.fbp.engine.node.InboxNode;
 import com.fbp.engine.node.Node;
 import com.fbp.engine.node.NodeExecutionMode;
 import com.fbp.engine.port.InputPort;
@@ -19,7 +20,7 @@ public class FlowTaskFactory {
         List<NodeTask> nodeTasks = new ArrayList<>();
         for (Node node : flow.getNodes().values()) {
             if (node.executionMode() == NodeExecutionMode.POLLING) {
-                nodeTasks.add(new NodeTask(node));
+                nodeTasks.add(new NodeTask((InboxNode) node));
             }
         }
 

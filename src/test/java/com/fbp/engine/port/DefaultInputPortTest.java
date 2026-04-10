@@ -1,7 +1,7 @@
 package com.fbp.engine.port;
 
 import com.fbp.engine.message.Message;
-import com.fbp.engine.node.Node;
+import com.fbp.engine.node.InboxNode;
 import com.fbp.engine.port.impl.DefaultInputPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.mockito.BDDMockito.then;
 class DefaultInputPortTest {
 
     @Mock
-    private Node owner;
+    private InboxNode owner;
 
     @Test
     @DisplayName("receive: receive()가 owner의 process()를 호출하는지(1)")
