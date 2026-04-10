@@ -1,6 +1,7 @@
 package com.fbp.engine.node;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.port.InputPort;
@@ -103,7 +104,7 @@ class AbstractNodeTest {
         // Given
         TestNode node = new TestNode("testNode1");
         node.addOutputPort("out");
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         node.getOutputPort("out").connect(connection);
         Message message = Message.of(Map.of("key", "value"));
 

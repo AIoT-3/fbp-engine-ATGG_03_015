@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +21,7 @@ class CounterNodeTest {
         CounterNode counterNode = new CounterNode("counterNode1");
         Message message = Message.of(Map.of("testKey", "testValue"));
 
-        Connection connection = new Connection("counter-to-next");
+        Connection connection = new LocalConnection("counter-to-next");
         counterNode.getOutputPort("out").connect(connection);
 
         // When & Then
@@ -38,7 +39,7 @@ class CounterNodeTest {
         CounterNode counterNode = new CounterNode("counterNode2");
         Message message = Message.of(Map.of("testKey", "testValue"));
 
-        Connection connection = new Connection("counter-to-next");
+        Connection connection = new LocalConnection("counter-to-next");
         counterNode.getOutputPort("out").connect(connection);
 
         // When & Then

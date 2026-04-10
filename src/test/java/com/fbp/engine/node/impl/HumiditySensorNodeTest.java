@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,7 @@ class HumiditySensorNodeTest {
     void testOnProcess() {
         // Given
         HumiditySensorNode humiditySensorNode = new HumiditySensorNode("humiditySensor", 30, 90);
-        Connection connection = new Connection("humidity-to-next");
+        Connection connection = new LocalConnection("humidity-to-next");
         humiditySensorNode.getOutputPort("out").connect(connection);
 
         // When
@@ -40,7 +41,7 @@ class HumiditySensorNodeTest {
     void testOnProcess_MultipleTriggers() {
         // Given
         HumiditySensorNode humiditySensorNode = new HumiditySensorNode("humiditySensor", 30, 90);
-        Connection connection = new Connection("humidity-to-next");
+        Connection connection = new LocalConnection("humidity-to-next");
         humiditySensorNode.getOutputPort("out").connect(connection);
 
         // When

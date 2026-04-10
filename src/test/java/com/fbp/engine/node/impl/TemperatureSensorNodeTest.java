@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,7 @@ class TemperatureSensorNodeTest {
     void testOnProcess() {
         // Given
         TemperatureSensorNode temperatureSensorNode = new TemperatureSensorNode("tempSensor", 15, 45);
-        Connection connection = new Connection("temp-to-next");
+        Connection connection = new LocalConnection("temp-to-next");
         temperatureSensorNode.getOutputPort("out").connect(connection);
 
         // When
@@ -40,7 +41,7 @@ class TemperatureSensorNodeTest {
     void testOnProcess_MultipleTriggers() {
         // Given
         TemperatureSensorNode temperatureSensorNode = new TemperatureSensorNode("tempSensor", 15, 45);
-        Connection connection = new Connection("temp-to-next");
+        Connection connection = new LocalConnection("temp-to-next");
         temperatureSensorNode.getOutputPort("out").connect(connection);
 
         // When

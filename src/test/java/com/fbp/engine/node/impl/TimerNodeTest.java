@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ class TimerNodeTest {
     void testInitialize() {
         // Given
         TimerNode timerNode = new TimerNode("timerNode1", 100);
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         timerNode.getOutputPort("out").connect(connection);
 
         // When
@@ -31,7 +32,7 @@ class TimerNodeTest {
     void testTickIncrement() {
         // Given
         TimerNode timerNode = new TimerNode("timerNode1", 10);
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         timerNode.getOutputPort("out").connect(connection);
 
         // When
@@ -60,7 +61,7 @@ class TimerNodeTest {
     void testShutdown() {
         // Given
         TimerNode timerNode = new TimerNode("timerNode1", 10);
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         timerNode.getOutputPort("out").connect(connection);
 
         // When
@@ -87,7 +88,7 @@ class TimerNodeTest {
     void testInterval() {
         // Given
         TimerNode timerNode = new TimerNode("timerNode1", 500);
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         timerNode.getOutputPort("out").connect(connection);
 
         // When

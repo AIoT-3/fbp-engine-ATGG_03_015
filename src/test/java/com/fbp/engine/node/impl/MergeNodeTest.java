@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,7 @@ class MergeNodeTest {
     void testOnProcess_MergeMessages() {
         // Given
         MergeNode mergeNode = new MergeNode("mergeNode");
-        Connection connection = new Connection("merge-to-next");
+        Connection connection = new LocalConnection("merge-to-next");
         mergeNode.getOutputPort("out").connect(connection);
         Message message1 = Message.of(Map.of("temperature", 25.0));
         Message message2 = Message.of(Map.of("humidity", 60.0));
@@ -39,7 +40,7 @@ class MergeNodeTest {
     void testOnProcess_WaitsForMatchingInput() {
         // Given
         MergeNode mergeNode = new MergeNode("mergeNode");
-        Connection connection = new Connection("merge-to-next");
+        Connection connection = new LocalConnection("merge-to-next");
         mergeNode.getOutputPort("out").connect(connection);
 
         // When

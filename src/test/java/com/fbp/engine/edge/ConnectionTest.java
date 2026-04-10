@@ -24,7 +24,7 @@ class ConnectionTest {
     @DisplayName("deliver-poll 기본 동작: deliver()한 메시지를 poll()로 꺼낼 수 있고, getBufferSize()가 예상값과 일치하는지(1)(6)")
     void testDeliverAndPoll() {
         // Given
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         Message message = Message.of(Map.of("key", "value"));
 
         // When
@@ -42,7 +42,7 @@ class ConnectionTest {
     @DisplayName("메시지 순서 보장: deliver()한 여러 메시지가 poll()에서 FIFO 순서대로 꺼내지는지(2)")
     void testPollMultipleMessagesInOrder() {
         // Given
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         Message message1 = Message.of(Map.of("key1", "value1"));
         Message message2 = Message.of(Map.of("key2", "value2"));
         Message message3 = Message.of(Map.of("key3", "value3"));
@@ -69,7 +69,7 @@ class ConnectionTest {
     @DisplayName("멀티스레드 deliver-poll: 별도 스레드에서 deliver()하고 다른 스레드에서 poll()하여 수신 성공하는지(3)")
     void testDeliverAndPollWithMultipleThreads() throws InterruptedException {
         // Given
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         Message message = Message.of(Map.of("key", "value"));
         CountDownLatch receivedLatch = new CountDownLatch(1);
         Message[] received = new Message[1];
@@ -92,7 +92,7 @@ class ConnectionTest {
     @DisplayName("poll 대기: deliver() 전에 poll() 호출 시 메시지 도착까지 블로킹되는지(4)")
     void testPollBlocksUntilMessageArrives() {
         // Given
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         Message message = Message.of(Map.of("key", "value"));
 
         // When & Then
@@ -111,7 +111,7 @@ class ConnectionTest {
     @DisplayName("버퍼 크기 제한: 크기 2인 Connection에 3번째 deliver() 시 블로킹되는지(5)")
     void testDeliverBlocksWhenBufferIsFull() throws InterruptedException, ExecutionException {
         // Given
-        Connection connection = new Connection("testConnection", 2);
+        Connection connection = new LocalConnection("testConnection", 2);
         Message message1 = Message.of(Map.of("key1", "value1"));
         Message message2 = Message.of(Map.of("key2", "value2"));
         Message message3 = Message.of(Map.of("key3", "value3"));
@@ -138,7 +138,7 @@ class ConnectionTest {
     @DisplayName("버퍼 크기 조회: 여러 메시지 deliver()와 poll() 이후 getBufferSize()가 예상값과 일치하는지(6)")
     void testGetBufferSize() {
         // Given
-        Connection connection = new Connection("testConnection");
+        Connection connection = new LocalConnection("testConnection");
         Message message1 = Message.of(Map.of("key1", "value1"));
         Message message2 = Message.of(Map.of("key2", "value2"));
 

@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,7 @@ class SplitNodeTest {
         SplitNode splitNode = new SplitNode("splitNode1", "testKey", 5);
         Message message = Message.of(Map.of("testKey", 10));
 
-        Connection matchConnection = new Connection("match-connection");
+        Connection matchConnection = new LocalConnection("match-connection");
         splitNode.getOutputPort("match").connect(matchConnection);
 
         // When
@@ -40,7 +41,7 @@ class SplitNodeTest {
         SplitNode splitNode = new SplitNode("splitNode1", "testKey", 5);
         Message message = Message.of(Map.of("testKey", 3));
 
-        Connection mismatchConnection = new Connection("mismatch-connection");
+        Connection mismatchConnection = new LocalConnection("mismatch-connection");
         splitNode.getOutputPort("mismatch").connect(mismatchConnection);
 
         // When
@@ -62,8 +63,8 @@ class SplitNodeTest {
         Message matchMessage = Message.of(Map.of("testKey", 10));
         Message mismatchMessage = Message.of(Map.of("testKey", 3));
 
-        Connection matchConnection = new Connection("match-connection");
-        Connection mismatchConnection = new Connection("mismatch-connection");
+        Connection matchConnection = new LocalConnection("match-connection");
+        Connection mismatchConnection = new LocalConnection("mismatch-connection");
         splitNode.getOutputPort("match").connect(matchConnection);
         splitNode.getOutputPort("mismatch").connect(mismatchConnection);
 
@@ -89,7 +90,7 @@ class SplitNodeTest {
         SplitNode splitNode = new SplitNode("splitNode1", "testKey", 5);
         Message message = Message.of(Map.of("testKey", 5));
 
-        Connection matchConnection = new Connection("match-connection");
+        Connection matchConnection = new LocalConnection("match-connection");
         splitNode.getOutputPort("match").connect(matchConnection);
 
         // When

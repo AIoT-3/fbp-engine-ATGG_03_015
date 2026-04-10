@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,7 @@ class TransformNodeTest {
             return Message.of(Map.of("testKey", payload.toUpperCase()));
         });
         Message inputMessage = Message.of(Map.of("testKey", "wowow"));
-        Connection connection = new Connection("transform-to-next");
+        Connection connection = new LocalConnection("transform-to-next");
         transformNode.getOutputPort("out").connect(connection);
 
         // When
@@ -42,7 +43,7 @@ class TransformNodeTest {
         // Given
         TransformNode transformNode = new TransformNode("transformNode2", message -> null);
         Message inputMessage = Message.of(Map.of("testKey", "wowow"));
-        Connection connection = new Connection("transform-to-next");
+        Connection connection = new LocalConnection("transform-to-next");
         transformNode.getOutputPort("out").connect(connection);
 
         // When

@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,7 @@ class LogNodeTest {
     void testOnProcess() {
         // Given
         LogNode logNode = new LogNode("logNode1");
-        Connection connection = new Connection("log-to-next");
+        Connection connection = new LocalConnection("log-to-next");
         logNode.getOutputPort("out").connect(connection);
         Message message = Message.of(Map.of("key", "value"));
 

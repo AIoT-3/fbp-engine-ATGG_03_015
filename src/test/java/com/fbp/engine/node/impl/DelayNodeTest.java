@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +21,7 @@ class DelayNodeTest {
         Message message = Message.of(Map.of("testKey", "testValue"));
         long startTime = System.currentTimeMillis();
 
-        Connection connection = new Connection("delay-to-next");
+        Connection connection = new LocalConnection("delay-to-next");
         delayNode.getOutputPort("out").connect(connection);
 
         // When

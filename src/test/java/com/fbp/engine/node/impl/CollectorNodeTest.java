@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +55,7 @@ class CollectorNodeTest {
         // Given
         GeneratorNode generatorNode = new GeneratorNode("generator");
         CollectorNode collectorNode = new CollectorNode("collector");
-        Connection connection = new Connection("generator-to-collector");
+        Connection connection = new LocalConnection("generator-to-collector");
         generatorNode.getOutputPort("out").connect(connection);
 
         // When

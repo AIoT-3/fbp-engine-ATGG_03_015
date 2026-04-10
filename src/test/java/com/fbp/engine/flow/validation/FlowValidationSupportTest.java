@@ -1,7 +1,7 @@
 package com.fbp.engine.flow.validation;
 
-import com.fbp.engine.edge.Connection;
 import com.fbp.engine.edge.Edge;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.flow.exception.CycleDetectedException;
 import com.fbp.engine.flow.exception.EmptyFlowException;
@@ -81,9 +81,9 @@ class FlowValidationSupportTest {
         TestNode targetNode = new TestNode("target", true, false);
         Map<String, Node> nodes = Map.of("source", sourceNode, "target", targetNode);
         Edge validEdge = new Edge("source", "out", "target", "in",
-                Connection.between("source", "out", "target", "in"));
+                LocalConnection.between("source", "out", "target", "in"));
         Edge invalidEdge = new Edge("source", "없는포트", "target", "in",
-                Connection.between("source", "없는포트", "target", "in"));
+                LocalConnection.between("source", "없는포트", "target", "in"));
 
         // When & Then
         assertAll(
@@ -103,13 +103,13 @@ class FlowValidationSupportTest {
                 "C", new TestNode("C", true, true)
         );
         List<Edge> acyclicEdges = List.of(
-                new Edge("A", "out", "B", "in", Connection.between("A", "out", "B", "in")),
-                new Edge("B", "out", "C", "in", Connection.between("B", "out", "C", "in"))
+                new Edge("A", "out", "B", "in", LocalConnection.between("A", "out", "B", "in")),
+                new Edge("B", "out", "C", "in", LocalConnection.between("B", "out", "C", "in"))
         );
         List<Edge> cyclicEdges = List.of(
-                new Edge("A", "out", "B", "in", Connection.between("A", "out", "B", "in")),
-                new Edge("B", "out", "C", "in", Connection.between("B", "out", "C", "in")),
-                new Edge("C", "out", "A", "in", Connection.between("C", "out", "A", "in"))
+                new Edge("A", "out", "B", "in", LocalConnection.between("A", "out", "B", "in")),
+                new Edge("B", "out", "C", "in", LocalConnection.between("B", "out", "C", "in")),
+                new Edge("C", "out", "A", "in", LocalConnection.between("C", "out", "A", "in"))
         );
 
         // When & Then

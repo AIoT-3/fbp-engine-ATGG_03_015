@@ -1,6 +1,7 @@
 package com.fbp.engine.node.impl;
 
 import com.fbp.engine.edge.Connection;
+import com.fbp.engine.edge.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
 import org.junit.jupiter.api.DisplayName;
@@ -17,8 +18,8 @@ class ThresholdFilterNodeTest {
     void testOnProcess_AlertAndNormal() {
         // Given
         ThresholdFilterNode thresholdFilterNode = new ThresholdFilterNode("filter", "temperature", 30);
-        Connection alertConnection = new Connection("alert-connection");
-        Connection normalConnection = new Connection("normal-connection");
+        Connection alertConnection = new LocalConnection("alert-connection");
+        Connection normalConnection = new LocalConnection("normal-connection");
         thresholdFilterNode.getOutputPort("alert").connect(alertConnection);
         thresholdFilterNode.getOutputPort("normal").connect(normalConnection);
 
@@ -43,8 +44,8 @@ class ThresholdFilterNodeTest {
     void testOnProcess_ThresholdBoundary() {
         // Given
         ThresholdFilterNode thresholdFilterNode = new ThresholdFilterNode("filter", "temperature", 30);
-        Connection alertConnection = new Connection("alert-connection");
-        Connection normalConnection = new Connection("normal-connection");
+        Connection alertConnection = new LocalConnection("alert-connection");
+        Connection normalConnection = new LocalConnection("normal-connection");
         thresholdFilterNode.getOutputPort("alert").connect(alertConnection);
         thresholdFilterNode.getOutputPort("normal").connect(normalConnection);
 
@@ -63,8 +64,8 @@ class ThresholdFilterNodeTest {
     void testOnProcess_MissingKey() {
         // Given
         ThresholdFilterNode thresholdFilterNode = new ThresholdFilterNode("filter", "temperature", 30);
-        Connection alertConnection = new Connection("alert-connection");
-        Connection normalConnection = new Connection("normal-connection");
+        Connection alertConnection = new LocalConnection("alert-connection");
+        Connection normalConnection = new LocalConnection("normal-connection");
         thresholdFilterNode.getOutputPort("alert").connect(alertConnection);
         thresholdFilterNode.getOutputPort("normal").connect(normalConnection);
 
