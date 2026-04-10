@@ -2,6 +2,7 @@ package com.fbp.engine.node.impl;
 
 import com.fbp.engine.message.Message;
 import com.fbp.engine.message.PortMessage;
+import com.fbp.engine.node.exception.FileNodeOperationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -61,7 +62,7 @@ class FileWriterNodeTest {
         fileWriterNode.shutdown();
 
         // When & Then
-        assertThrows(IllegalStateException.class,
+        assertThrows(FileNodeOperationException.class,
                 () -> fileWriterNode.process(new PortMessage("in", Message.of(Map.of("value", 1)))));
     }
 }

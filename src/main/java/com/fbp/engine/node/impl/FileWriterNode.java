@@ -2,6 +2,7 @@ package com.fbp.engine.node.impl;
 
 import com.fbp.engine.message.PortMessage;
 import com.fbp.engine.node.AbstractNode;
+import com.fbp.engine.node.exception.FileNodeOperationException;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -22,14 +23,14 @@ public class FileWriterNode extends AbstractNode {
         try {
             writer = new BufferedWriter(new FileWriter(filePath, true));
         } catch (IOException e) {
-            throw new IllegalStateException("파일 초기화 중 오류가 발생했습니다: " + filePath, e);
+            throw new FileNodeOperationException("파일 초기화 중 오류가 발생했습니다: " + filePath, e);
         }
     }
 
     @Override
     public void onProcess(PortMessage portMessage) {
         if (writer == null) {
-            throw new IllegalStateException("파일 writer가 초기화되지 않았습니다.");
+            throw new FileNodeOperationException("파일 writer가 초기화되지 않았습니다.");
         }
 
         try {
@@ -37,7 +38,7 @@ public class FileWriterNode extends AbstractNode {
             writer.newLine();
             writer.flush();
         } catch (IOException e) {
-            throw new IllegalStateException("파일 기록 중 오류가 발생했습니다: " + filePath, e);
+            throw new FileNodeOperationException("파일 기록 중 오류가 발생했습니다: " + filePath, e);
         }
     }
 
@@ -50,7 +51,7 @@ public class FileWriterNode extends AbstractNode {
         try {
             writer.close();
         } catch (IOException e) {
-            throw new IllegalStateException("파일 종료 중 오류가 발생했습니다: " + filePath, e);
+            throw new FileNodeOperationException("파일 종료 중 오류가 발생했습니다: " + filePath, e);
         }
     }
 }
