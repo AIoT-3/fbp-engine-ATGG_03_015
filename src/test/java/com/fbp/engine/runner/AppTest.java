@@ -4,11 +4,11 @@ import com.fbp.engine.engine.FlowEngineState;
 import com.fbp.engine.engine.FlowEngine;
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.message.Message;
-import com.fbp.engine.node.impl.CollectorNode;
-import com.fbp.engine.node.impl.FileWriterNode;
-import com.fbp.engine.node.impl.TemperatureSensorNode;
-import com.fbp.engine.node.impl.ThresholdFilterNode;
-import com.fbp.engine.node.impl.TimerNode;
+import com.fbp.engine.node.builtin.sink.CollectorNode;
+import com.fbp.engine.node.builtin.sink.FileWriterNode;
+import com.fbp.engine.node.builtin.source.TemperatureSensorNode;
+import com.fbp.engine.node.builtin.processor.ThresholdFilterNode;
+import com.fbp.engine.node.builtin.source.TimerNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
