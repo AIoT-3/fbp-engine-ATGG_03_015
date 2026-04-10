@@ -1,6 +1,5 @@
-package com.fbp.engine.cli;
+package com.fbp.engine.cli.command;
 
-import com.fbp.engine.cli.command.Command;
 import com.fbp.engine.cli.command.impl.ExitCommand;
 import com.fbp.engine.cli.command.impl.ListCommand;
 import com.fbp.engine.cli.command.impl.StartCommand;

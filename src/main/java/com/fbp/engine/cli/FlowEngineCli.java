@@ -1,6 +1,7 @@
 package com.fbp.engine.cli;
 
 import com.fbp.engine.cli.command.Command;
+import com.fbp.engine.cli.command.CommandFactory;
 import com.fbp.engine.cli.parser.CommandParser;
 import com.fbp.engine.cli.parser.ParsedCommand;
 import com.fbp.engine.engine.FlowEngine;
