@@ -1,6 +1,6 @@
 package com.fbp.engine.engine;
 
-public enum EngineState {
+public enum FlowEngineState {
     INITIALIZED,
     RUNNING,
     STOPPED
