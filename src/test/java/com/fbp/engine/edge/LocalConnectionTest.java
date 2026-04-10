@@ -18,7 +18,7 @@ import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ConnectionTest {
+class LocalConnectionTest {
 
     @Test
     @DisplayName("deliver-poll 기본 동작: deliver()한 메시지를 poll()로 꺼낼 수 있고, getBufferSize()가 예상값과 일치하는지(1)(6)")
