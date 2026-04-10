@@ -125,7 +125,7 @@ class FlowEngineTest {
                 () -> assertTrue(processed),
                 () -> assertEquals(FlowEngineState.STOPPED, flowEngine.getState()),
                 () -> assertEquals(FlowRuntimeState.STOPPED, flowEngine.getRuntimes().get("test-flow").getState()),
-                () -> assertFalse(flowEngine.getRuntimes().get("test-flow").hasActiveExecution())
+                () -> assertFalse(flowEngine.getRuntimes().get("test-flow").isRunning())
         );
     }
 
@@ -154,7 +154,7 @@ class FlowEngineTest {
         assertAll(
                 () -> assertEquals(FlowEngineState.INITIALIZED, flowEngine.getState()),
                 () -> assertEquals(FlowRuntimeState.READY, flowEngine.getRuntimes().get("invalid-flow").getState()),
-                () -> assertFalse(flowEngine.getRuntimes().get("invalid-flow").hasActiveExecution())
+                () -> assertFalse(flowEngine.getRuntimes().get("invalid-flow").isRunning())
         );
     }
 

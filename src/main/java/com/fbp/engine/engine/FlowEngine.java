@@ -1,9 +1,7 @@
 package com.fbp.engine.engine;
 
-import com.fbp.engine.engine.task.FlowTaskFactory;
 import com.fbp.engine.flow.runtime.FlowRuntime;
 import com.fbp.engine.flow.runtime.FlowRuntimeState;
-import com.fbp.engine.engine.task.FlowTasks;
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.flow.exception.FlowNotFoundException;
 import lombok.Getter;
@@ -49,8 +47,7 @@ public class FlowEngine {
             return;
         }
 
-        FlowTasks flowTasks = FlowTaskFactory.createTasks(flow);
-        runtime.start(flowTasks, executorService);
+        runtime.start(executorService);
         log.info("[Engine] 플로우 '{}' 시작됨", flowId);
     }
 

@@ -1,53 +1,53 @@
 package com.fbp.engine.flow.runtime;
 
 import com.fbp.engine.engine.exception.FlowTaskExecutionException;
-import com.fbp.engine.engine.task.FlowTasks;
+import com.fbp.engine.edge.Edge;
+import com.fbp.engine.edge.runtime.WireRuntime;
 import com.fbp.engine.exception.EngineException;
 import com.fbp.engine.flow.Flow;
 import com.fbp.engine.node.Node;
+import com.fbp.engine.node.runtime.NodeRuntime;
+import com.fbp.engine.port.InputPort;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class FlowRuntime {
     @Getter
     private final Flow flow;
+    private final List<NodeRuntime> nodeRuntimes;
+    private final List<WireRuntime> wireRuntimes;
     private final ReentrantLock lifecycleLock;
     private FlowRuntimeState state;
     private EngineException lastFailure;
-    private FlowExecutionHandles executionHandles;
 
     public FlowRuntime(Flow flow) {
         this.flow = flow;
+        this.nodeRuntimes = createNodeRuntimes(flow);
+        this.wireRuntimes = createWireRuntimes(flow);
         this.lifecycleLock = new ReentrantLock();
         this.state = FlowRuntimeState.READY;
-        this.executionHandles = FlowExecutionHandles.empty();
     }
 
-    public void start(FlowTasks flowTasks, ExecutorService executorService) {
+    public void start(ExecutorService executorService) {
         lifecycleLock.lock();
         try {
             if (state == FlowRuntimeState.RUNNING) {
                 return;
             }
 
-            executionHandles.cancelAll();
-            executionHandles = FlowExecutionHandles.empty();
             lastFailure = null;
+            state = FlowRuntimeState.RUNNING;
 
             try {
-                initializeNodes();
-                List<Future<?>> taskFutures = submitTasks(flowTasks, executorService);
-                Future<?> supervisorFuture = executorService.submit(new FlowRuntimeSupervisor(this, taskFutures));
-                executionHandles = new FlowExecutionHandles(taskFutures, supervisorFuture);
-                state = FlowRuntimeState.RUNNING;
+                startRuntimes(executorService);
             } catch (RuntimeException e) {
                 state = FlowRuntimeState.FAILED;
                 lastFailure = new FlowTaskExecutionException(flow.getId(), e);
-                shutdownNodes();
+                stopRuntimes();
                 throw e;
             }
         } finally {
@@ -58,16 +58,8 @@ public class FlowRuntime {
     public void stop() {
         lifecycleLock.lock();
         try {
-            FlowRuntimeState previousState = state;
-            FlowExecutionHandles currentHandles = executionHandles;
-
-            executionHandles = FlowExecutionHandles.empty();
             state = FlowRuntimeState.STOPPED;
-            currentHandles.cancelAll();
-
-            if (previousState == FlowRuntimeState.RUNNING) {
-                shutdownNodes();
-            }
+            stopRuntimes();
         } finally {
             lifecycleLock.unlock();
         }
@@ -80,12 +72,9 @@ public class FlowRuntime {
                 return;
             }
 
-            FlowExecutionHandles currentHandles = executionHandles;
-            executionHandles = FlowExecutionHandles.empty();
             lastFailure = exception;
             state = FlowRuntimeState.FAILED;
-            currentHandles.cancelAll();
-            shutdownNodes();
+            stopRuntimes();
         } finally {
             lifecycleLock.unlock();
         }
@@ -95,15 +84,6 @@ public class FlowRuntime {
         lifecycleLock.lock();
         try {
             return state == FlowRuntimeState.RUNNING;
-        } finally {
-            lifecycleLock.unlock();
-        }
-    }
-
-    public boolean hasActiveExecution() {
-        lifecycleLock.lock();
-        try {
-            return !executionHandles.isEmpty();
         } finally {
             lifecycleLock.unlock();
         }
@@ -127,22 +107,32 @@ public class FlowRuntime {
         }
     }
 
-    private void initializeNodes() {
+    private List<NodeRuntime> createNodeRuntimes(Flow flow) {
+        List<NodeRuntime> runtimes = new ArrayList<>();
         for (Node node : flow.getNodes().values()) {
-            node.initialize();
+            runtimes.add(new NodeRuntime(node, this));
         }
+        return List.copyOf(runtimes);
     }
 
-    private void shutdownNodes() {
-        for (Node node : flow.getNodes().values()) {
-            node.shutdown();
+    private List<WireRuntime> createWireRuntimes(Flow flow) {
+        List<WireRuntime> runtimes = new ArrayList<>();
+        for (Edge edge : flow.getEdges()) {
+            InputPort targetInputPort = flow.getNodes()
+                    .get(edge.targetNodeId())
+                    .getInputPort(edge.targetPortName());
+            runtimes.add(new WireRuntime(edge, targetInputPort, this));
         }
+        return List.copyOf(runtimes);
     }
 
-    private List<Future<?>> submitTasks(FlowTasks flowTasks, ExecutorService executorService) {
-        List<Future<?>> taskFutures = new java.util.ArrayList<>();
-        flowTasks.nodeTasks().forEach(task -> taskFutures.add(executorService.submit(task)));
-        flowTasks.edgeDispatchTasks().forEach(task -> taskFutures.add(executorService.submit(task)));
-        return List.copyOf(taskFutures);
+    private void startRuntimes(ExecutorService executorService) {
+        nodeRuntimes.forEach(runtime -> runtime.start(executorService));
+        wireRuntimes.forEach(runtime -> runtime.start(executorService));
+    }
+
+    private void stopRuntimes() {
+        nodeRuntimes.forEach(NodeRuntime::stop);
+        wireRuntimes.forEach(WireRuntime::stop);
     }
 }
