@@ -43,7 +43,7 @@ public class NodeRuntime implements Runnable {
 
             if (!(node instanceof InboxNode)) {
                 throw new FlowTaskExecutionException(owner.getFlow().getId(),
-                        new IllegalStateException("Polling node must implement InboxNode: " + node.getId()));
+                        new IllegalStateException("Polling node는 InboxNode의 구현체여야 합니다: " + node.getId()));
             }
 
             executionHandle = executorService.submit(this);
