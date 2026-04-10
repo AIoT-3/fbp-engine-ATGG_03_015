@@ -1,7 +1,7 @@
 package com.fbp.engine.engine;
 
 import com.fbp.engine.edge.Edge;
-import com.fbp.engine.edge.connection.WireRuntime;
+import com.fbp.engine.edge.runtime.WireRuntime;
 import com.fbp.engine.engine.task.EdgeDispatchTask;
 import com.fbp.engine.engine.task.FlowTasks;
 import com.fbp.engine.engine.task.NodeTask;

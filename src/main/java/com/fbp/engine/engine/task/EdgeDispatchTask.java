@@ -1,6 +1,6 @@
 package com.fbp.engine.engine.task;
 
-import com.fbp.engine.edge.connection.WireRuntime;
+import com.fbp.engine.edge.runtime.WireRuntime;
 import com.fbp.engine.exception.EngineException;
 import lombok.RequiredArgsConstructor;
 

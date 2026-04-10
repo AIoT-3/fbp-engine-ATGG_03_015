@@ -1,4 +1,4 @@
-package com.fbp.engine.edge.connection;
+package com.fbp.engine.edge.runtime;
 
 import com.fbp.engine.edge.Edge;
 import com.fbp.engine.port.InputPort;
