@@ -3,9 +3,9 @@ package com.fbp.engine.core.node.runtime;
 import com.fbp.engine.core.flow.exception.FlowRuntimeException;
 import com.fbp.engine.core.exception.EngineException;
 import com.fbp.engine.core.flow.runtime.FlowRuntime;
-import com.fbp.engine.core.node.InboxNode;
-import com.fbp.engine.core.node.Node;
-import com.fbp.engine.core.node.NodeExecutionMode;
+import com.fbp.engine.core.node.model.InboxNode;
+import com.fbp.engine.core.node.model.Node;
+import com.fbp.engine.core.node.model.NodeExecutionMode;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;

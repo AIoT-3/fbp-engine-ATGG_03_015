@@ -3,7 +3,7 @@ package com.fbp.engine.core.flow.validation;
 import com.fbp.engine.core.exception.EngineException;
 import com.fbp.engine.core.edge.Edge;
 import com.fbp.engine.core.flow.Flow;
-import com.fbp.engine.core.node.Node;
+import com.fbp.engine.core.node.model.Node;
 
 import java.util.ArrayList;
 import java.util.List;

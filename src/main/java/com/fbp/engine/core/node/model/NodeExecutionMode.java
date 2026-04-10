@@ -1,4 +1,4 @@
-package com.fbp.engine.core.node;
+package com.fbp.engine.core.node.model;
 
 public enum NodeExecutionMode {
     POLLING,

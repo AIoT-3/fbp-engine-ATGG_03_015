@@ -5,7 +5,7 @@ import com.fbp.engine.core.edge.Edge;
 import com.fbp.engine.core.flow.exception.CycleDetectedException;
 import com.fbp.engine.core.flow.exception.EmptyFlowException;
 import com.fbp.engine.core.flow.exception.FlowNotFoundException;
-import com.fbp.engine.core.node.Node;
+import com.fbp.engine.core.node.model.Node;
 import com.fbp.engine.core.node.exception.NodeNotFoundException;
 import com.fbp.engine.core.port.exception.InputPortNotFoundException;
 import com.fbp.engine.core.port.exception.OutputPortNotFoundException;

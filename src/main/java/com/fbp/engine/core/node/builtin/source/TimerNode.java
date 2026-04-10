@@ -2,8 +2,8 @@ package com.fbp.engine.core.node.builtin.source;
 
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.AbstractNode;
-import com.fbp.engine.core.node.NodeExecutionMode;
+import com.fbp.engine.core.node.model.AbstractNode;
+import com.fbp.engine.core.node.model.NodeExecutionMode;
 
 import java.util.Map;
 import java.util.concurrent.Executors;

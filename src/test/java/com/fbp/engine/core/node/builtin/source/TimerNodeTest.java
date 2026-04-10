@@ -3,8 +3,7 @@ package com.fbp.engine.core.node.builtin.source;
 import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.edge.connection.LocalConnection;
 import com.fbp.engine.core.message.Message;
-import com.fbp.engine.core.node.NodeExecutionMode;
-import com.fbp.engine.core.node.builtin.source.TimerNode;
+import com.fbp.engine.core.node.model.NodeExecutionMode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

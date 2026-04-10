@@ -2,7 +2,7 @@ package com.fbp.engine.core.flow;
 
 import com.fbp.engine.core.exception.EngineException;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.AbstractNode;
+import com.fbp.engine.core.node.model.AbstractNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

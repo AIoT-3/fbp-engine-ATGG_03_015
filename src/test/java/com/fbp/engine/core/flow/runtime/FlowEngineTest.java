@@ -5,7 +5,7 @@ import com.fbp.engine.core.flow.exception.FlowNotFoundException;
 import com.fbp.engine.core.flow.Flow;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.AbstractNode;
+import com.fbp.engine.core.node.model.AbstractNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

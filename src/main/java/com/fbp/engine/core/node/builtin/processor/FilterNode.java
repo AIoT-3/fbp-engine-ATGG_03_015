@@ -1,7 +1,7 @@
 package com.fbp.engine.core.node.builtin.processor;
 
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.AbstractNode;
+import com.fbp.engine.core.node.model.AbstractNode;
 
 public class FilterNode extends AbstractNode {
     private String key;

@@ -5,7 +5,7 @@ import com.fbp.engine.core.edge.Edge;
 import com.fbp.engine.core.edge.runtime.WireRuntime;
 import com.fbp.engine.core.exception.EngineException;
 import com.fbp.engine.core.flow.Flow;
-import com.fbp.engine.core.node.Node;
+import com.fbp.engine.core.node.model.Node;
 import com.fbp.engine.core.node.runtime.NodeRuntime;
 import com.fbp.engine.core.port.InputPort;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.fbp.engine.core.node.builtin.sink;
 
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.AbstractNode;
+import com.fbp.engine.core.node.model.AbstractNode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;

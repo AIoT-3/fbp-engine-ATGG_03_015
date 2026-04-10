@@ -2,7 +2,7 @@ package com.fbp.engine.core.node.builtin.sink;
 
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.AbstractNode;
+import com.fbp.engine.core.node.model.AbstractNode;
 import lombok.Getter;
 
 import java.util.ArrayList;

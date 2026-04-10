@@ -1,8 +1,7 @@
 package com.fbp.engine.core.node.builtin.sink;
 
-import com.fbp.engine.core.node.AbstractNode;
-import com.fbp.engine.core.node.Node;
-import com.fbp.engine.core.node.builtin.sink.PrintNode;
+import com.fbp.engine.core.node.model.AbstractNode;
+import com.fbp.engine.core.node.model.Node;
 import com.fbp.engine.core.port.InputPort;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;

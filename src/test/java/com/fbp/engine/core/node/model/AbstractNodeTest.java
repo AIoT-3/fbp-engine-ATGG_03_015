@@ -1,11 +1,9 @@
-package com.fbp.engine.core.node;
+package com.fbp.engine.core.node.model;
 
 import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.edge.connection.LocalConnection;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.AbstractNode;
-import com.fbp.engine.core.node.NodeExecutionMode;
 import com.fbp.engine.core.port.InputPort;
 import com.fbp.engine.core.port.OutputPort;
 import org.junit.jupiter.api.DisplayName;

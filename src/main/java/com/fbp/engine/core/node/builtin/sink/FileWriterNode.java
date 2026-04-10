@@ -1,7 +1,7 @@
 package com.fbp.engine.core.node.builtin.sink;
 
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.AbstractNode;
+import com.fbp.engine.core.node.model.AbstractNode;
 import com.fbp.engine.core.node.exception.FileNodeOperationException;
 
 import java.io.BufferedWriter;

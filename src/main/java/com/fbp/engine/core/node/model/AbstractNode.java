@@ -1,4 +1,4 @@
-package com.fbp.engine.core.node;
+package com.fbp.engine.core.node.model;
 
 import com.fbp.engine.core.port.impl.DefaultInputPort;
 import com.fbp.engine.core.port.impl.DefaultOutputPort;

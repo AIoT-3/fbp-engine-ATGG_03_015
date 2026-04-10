@@ -5,7 +5,7 @@ import com.fbp.engine.core.edge.connection.ConnectionFactory;
 import com.fbp.engine.core.edge.Edge;
 import com.fbp.engine.core.flow.validation.FlowValidator;
 import com.fbp.engine.core.flow.validation.FlowValidationSupport;
-import com.fbp.engine.core.node.Node;
+import com.fbp.engine.core.node.model.Node;
 import lombok.Getter;
 
 import java.util.ArrayList;
