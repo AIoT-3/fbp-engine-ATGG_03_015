@@ -1,5 +1,7 @@
 package com.fbp.engine.core.node.protocol;
 
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.node.model.AbstractNode;
 import lombok.Getter;
 
@@ -44,14 +46,7 @@ public abstract class ProtocolNode extends AbstractNode {
     protected abstract void doDisconnect();
 
     private void connectWithRetry() {
-        Object retryCountValue = getConfigValue(RETRY_COUNT_KEY);
-        int retryCount;
-        if (retryCountValue instanceof Number number) {
-            retryCount = number.intValue();
-        } else {
-            retryCount = DEFAULT_RETRY_COUNT;
-        }
-
+        int retryCount = getIntConfig(RETRY_COUNT_KEY, DEFAULT_RETRY_COUNT);
         for (int attempt = 1; attempt <= retryCount; attempt++) {
             try {
                 connectionState = ProtocolConnectionState.CONNECTING;
@@ -78,8 +73,50 @@ public abstract class ProtocolNode extends AbstractNode {
         return connectionState == ProtocolConnectionState.CONNECTED;
     }
 
-    public Object getConfigValue(String key) {
+    protected Object getConfigValue(String key) {
         return config.get(key);
     }
+
+    protected String getStringConfig(String key) {
+        Object value = getConfigValue(key);
+        if (value instanceof String stringValue && !stringValue.isBlank()) {
+            return stringValue;
+        }
+        throw new EngineException(EngineFailureType.PROTOCOL_CONFIG_INVALID);
+    }
+
+    protected String getStringConfig(String key, String defaultValue) {
+        Object value = getConfigValue(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof String stringValue && !stringValue.isBlank()) {
+            return stringValue;
+        }
+        throw new EngineException(EngineFailureType.PROTOCOL_CONFIG_INVALID);
+    }
+
+    protected int getIntConfig(String key, int defaultValue) {
+        Object value = getConfigValue(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        throw new EngineException(EngineFailureType.PROTOCOL_CONFIG_INVALID);
+    }
+
+    protected boolean getBooleanConfig(String key, boolean defaultValue) {
+        Object value = getConfigValue(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof Boolean booleanValue) {
+            return booleanValue;
+        }
+        throw new EngineException(EngineFailureType.PROTOCOL_CONFIG_INVALID);
+    }
+
 
 }
