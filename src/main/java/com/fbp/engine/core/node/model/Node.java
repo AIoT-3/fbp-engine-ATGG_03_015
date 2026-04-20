@@ -10,7 +10,7 @@ public interface Node {
     void initialize();
     void shutdown();
     default NodeExecutionMode executionMode() {
-        return NodeExecutionMode.POLLING;
+        return NodeExecutionMode.INBOX_DRIVEN;
     }
     InputPort getInputPort(String name);
     OutputPort getOutputPort(String name);

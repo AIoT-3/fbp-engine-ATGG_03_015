@@ -36,7 +36,7 @@ public class NodeRuntime implements Runnable {
             node.initialize();
             initialized = true;
 
-            if (node.executionMode() != NodeExecutionMode.POLLING) {
+            if (node.executionMode() != NodeExecutionMode.INBOX_DRIVEN) {
                 executionHandle = null;
                 state = NodeRuntimeState.RUNNING;
                 return;

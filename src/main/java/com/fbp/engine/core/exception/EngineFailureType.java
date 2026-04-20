@@ -17,7 +17,7 @@ public enum EngineFailureType implements FailureType {
 
     // Node
     NODE_NOT_FOUND("노드를 찾을 수 없습니다: %s"),
-    INVALID_NODE_EXECUTION_MODE("Polling node는 InboxNode의 구현체여야 합니다: %s"),
+    INVALID_NODE_EXECUTION_MODE("INBOX_DRIVEN node는 InboxNode의 구현체여야 합니다: %s"),
     NODE_INPUT_ENQUEUE_INTERRUPTED("노드 입력 큐 적재 중 인터럽트가 발생했습니다: %s"),
     NODE_INPUT_DEQUEUE_INTERRUPTED("노드 입력 큐 소비 중 인터럽트가 발생했습니다: %s"),
 
