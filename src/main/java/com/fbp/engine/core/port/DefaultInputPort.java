@@ -1,8 +1,7 @@
-package com.fbp.engine.core.port.impl;
+package com.fbp.engine.core.port;
 
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.node.model.InboxNode;
-import com.fbp.engine.core.port.InputPort;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

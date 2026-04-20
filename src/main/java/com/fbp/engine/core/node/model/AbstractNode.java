@@ -1,7 +1,7 @@
 package com.fbp.engine.core.node.model;
 
-import com.fbp.engine.core.port.impl.DefaultInputPort;
-import com.fbp.engine.core.port.impl.DefaultOutputPort;
+import com.fbp.engine.core.port.DefaultInputPort;
+import com.fbp.engine.core.port.DefaultOutputPort;
 import com.fbp.engine.core.port.InputPort;
 import com.fbp.engine.core.port.OutputPort;
 import com.fbp.engine.core.exception.EngineException;

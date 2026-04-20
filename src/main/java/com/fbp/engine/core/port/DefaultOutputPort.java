@@ -1,8 +1,7 @@
-package com.fbp.engine.core.port.impl;
+package com.fbp.engine.core.port;
 
 import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.message.Message;
-import com.fbp.engine.core.port.OutputPort;
 import lombok.NonNull;
 
 import java.util.ArrayList;
