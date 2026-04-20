@@ -4,7 +4,6 @@ import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.edge.connection.LocalConnection;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.builtin.processor.SplitNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,7 @@ class SplitNodeTest {
 
         // When
         splitNode.process(new PortMessage("in", message));
-        Message result = matchConnection.poll();
+        Message result = matchConnection.take();
 
         // Then
         assertAll(
@@ -47,7 +46,7 @@ class SplitNodeTest {
 
         // When
         splitNode.process(new PortMessage("in", message));
-        Message result = mismatchConnection.poll();
+        Message result = mismatchConnection.take();
 
         // Then
         assertAll(
@@ -71,9 +70,9 @@ class SplitNodeTest {
 
         // When
         splitNode.process(new PortMessage("in", matchMessage));
-        Message matchResult = matchConnection.poll();
+        Message matchResult = matchConnection.take();
         splitNode.process(new PortMessage("in", mismatchMessage));
-        Message mismatchResult = mismatchConnection.poll();
+        Message mismatchResult = mismatchConnection.take();
 
         // Then
         assertAll(
@@ -96,7 +95,7 @@ class SplitNodeTest {
 
         // When
         splitNode.process(new PortMessage("in", message));
-        Message result = matchConnection.poll();
+        Message result = matchConnection.take();
 
         // Then
         assertAll(

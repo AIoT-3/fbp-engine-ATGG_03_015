@@ -7,7 +7,7 @@ public interface Connection {
 
     void deliver(Message message);
 
-    Message poll();
+    Message take();
 
     int getBufferSize();
 }

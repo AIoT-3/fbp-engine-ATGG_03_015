@@ -31,7 +31,7 @@ class TimerNodeTest {
 
         // When
         timerNode.initialize();
-        Message message = connection.poll();
+        Message message = connection.take();
         timerNode.shutdown();
 
         // Then
@@ -48,10 +48,10 @@ class TimerNodeTest {
 
         // When
         timerNode.initialize();
-        Message message1 = connection.poll();
-        Message message2 = connection.poll();
-        Message message3 = connection.poll();
-        Message message4 = connection.poll();
+        Message message1 = connection.take();
+        Message message2 = connection.take();
+        Message message3 = connection.take();
+        Message message4 = connection.take();
         timerNode.shutdown();
 
         // Then
@@ -77,7 +77,7 @@ class TimerNodeTest {
 
         // When
         timerNode.initialize();
-        Message message = connection.poll();
+        Message message = connection.take();
         timerNode.shutdown();
         int sizeAfterShutdown = connection.getBufferSize();
 

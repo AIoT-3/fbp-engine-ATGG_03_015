@@ -4,7 +4,6 @@ import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.edge.connection.LocalConnection;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.builtin.source.HumiditySensorNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +23,7 @@ class HumiditySensorNodeTest {
 
         // When
         humiditySensorNode.process(new PortMessage("trigger", Message.of(Map.of())));
-        Message result = connection.poll();
+        Message result = connection.take();
         Double humidity = result.get("humidity");
 
         // Then

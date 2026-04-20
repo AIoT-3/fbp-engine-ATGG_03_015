@@ -23,15 +23,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class LocalConnectionTest {
 
     @Test
-    @DisplayName("deliver-poll 기본 동작: deliver()한 메시지를 poll()로 꺼낼 수 있고, getBufferSize()가 예상값과 일치하는지(1)(6)")
-    void testDeliverAndPoll() {
+    @DisplayName("deliver-take 기본 동작: deliver()한 메시지를 take()로 꺼낼 수 있고, getBufferSize()가 예상값과 일치하는지(1)(6)")
+    void testDeliverAndTake() {
         // Given
         Connection connection = new LocalConnection("testConnection");
         Message message = Message.of(Map.of("key", "value"));
 
         // When
         connection.deliver(message);
-        Message result = connection.poll();
+        Message result = connection.take();
 
         // Then
         assertAll(
@@ -41,8 +41,8 @@ class LocalConnectionTest {
     }
 
     @Test
-    @DisplayName("메시지 순서 보장: deliver()한 여러 메시지가 poll()에서 FIFO 순서대로 꺼내지는지(2)")
-    void testPollMultipleMessagesInOrder() {
+    @DisplayName("메시지 순서 보장: deliver()한 여러 메시지가 take()에서 FIFO 순서대로 꺼내지는지(2)")
+    void testTakeMultipleMessagesInOrder() {
         // Given
         Connection connection = new LocalConnection("testConnection");
         Message message1 = Message.of(Map.of("key1", "value1"));
@@ -55,9 +55,9 @@ class LocalConnectionTest {
         connection.deliver(message3);
 
         List<Message> results = List.of(
-                connection.poll(),
-                connection.poll(),
-                connection.poll()
+                connection.take(),
+                connection.take(),
+                connection.take()
         );
 
         // Then
@@ -68,8 +68,8 @@ class LocalConnectionTest {
     }
 
     @Test
-    @DisplayName("멀티스레드 deliver-poll: 별도 스레드에서 deliver()하고 다른 스레드에서 poll()하여 수신 성공하는지(3)")
-    void testDeliverAndPollWithMultipleThreads() throws InterruptedException {
+    @DisplayName("멀티스레드 deliver-take: 별도 스레드에서 deliver()하고 다른 스레드에서 take()하여 수신 성공하는지(3)")
+    void testDeliverAndTakeWithMultipleThreads() throws InterruptedException {
         // Given
         Connection connection = new LocalConnection("testConnection");
         Message message = Message.of(Map.of("key", "value"));
@@ -77,7 +77,7 @@ class LocalConnectionTest {
         Message[] received = new Message[1];
 
         Thread consumerThread = new Thread(() -> {
-            received[0] = connection.poll();
+            received[0] = connection.take();
             receivedLatch.countDown();
         });
 
@@ -91,15 +91,15 @@ class LocalConnectionTest {
     }
 
     @Test
-    @DisplayName("poll 대기: deliver() 전에 poll() 호출 시 메시지 도착까지 블로킹되는지(4)")
-    void testPollBlocksUntilMessageArrives() {
+    @DisplayName("take 대기: deliver() 전에 take() 호출 시 메시지 도착까지 블로킹되는지(4)")
+    void testTakeBlocksUntilMessageArrives() {
         // Given
         Connection connection = new LocalConnection("testConnection");
         Message message = Message.of(Map.of("key", "value"));
 
         // When & Then
         assertTimeout(Duration.ofSeconds(1), () -> {
-            CompletableFuture<Message> future = CompletableFuture.supplyAsync(connection::poll);
+            CompletableFuture<Message> future = CompletableFuture.supplyAsync(connection::take);
 
             Thread.sleep(200);
             assertFalse(future.isDone());
@@ -128,7 +128,7 @@ class LocalConnectionTest {
         try {
             assertThrows(TimeoutException.class, () -> future.get(200, TimeUnit.MILLISECONDS));
 
-            connection.poll();
+            connection.take();
             assertDoesNotThrow(() -> future.get(1, TimeUnit.SECONDS));
             assertEquals(2, connection.getBufferSize());
         } finally {
@@ -137,7 +137,7 @@ class LocalConnectionTest {
     }
 
     @Test
-    @DisplayName("버퍼 크기 조회: 여러 메시지 deliver()와 poll() 이후 getBufferSize()가 예상값과 일치하는지(6)")
+    @DisplayName("버퍼 크기 조회: 여러 메시지 deliver()와 take() 이후 getBufferSize()가 예상값과 일치하는지(6)")
     void testGetBufferSize() {
         // Given
         Connection connection = new LocalConnection("testConnection");
@@ -152,7 +152,7 @@ class LocalConnectionTest {
         assertEquals(2, connection.getBufferSize());
 
         // When
-        connection.poll();
+        connection.take();
 
         // Then
         assertEquals(1, connection.getBufferSize());

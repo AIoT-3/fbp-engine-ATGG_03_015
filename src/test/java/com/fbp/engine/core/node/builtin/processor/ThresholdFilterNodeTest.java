@@ -4,7 +4,6 @@ import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.edge.connection.LocalConnection;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.builtin.processor.ThresholdFilterNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +29,8 @@ class ThresholdFilterNodeTest {
         // When
         thresholdFilterNode.process(new PortMessage("in", alertMessage));
         thresholdFilterNode.process(new PortMessage("in", normalMessage));
-        Message alertResult = alertConnection.poll();
-        Message normalResult = normalConnection.poll();
+        Message alertResult = alertConnection.take();
+        Message normalResult = normalConnection.take();
 
         // Then
         assertAll(

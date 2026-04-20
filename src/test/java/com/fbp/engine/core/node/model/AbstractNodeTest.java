@@ -110,7 +110,7 @@ class AbstractNodeTest {
 
         // When
         node.send("out", message);
-        Message receivedMessage = connection.poll();
+        Message receivedMessage = connection.take();
 
         // Then
         assertEquals(message, receivedMessage);

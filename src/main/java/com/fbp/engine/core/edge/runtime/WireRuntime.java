@@ -32,15 +32,15 @@ public class WireRuntime implements Runnable {
         }
     }
 
-    public void dispatch() {
-        targetInputPort.receive(edge.connection().poll());
+    public void dispatchNext() {
+        targetInputPort.receive(edge.connection().take());
     }
 
     @Override
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                dispatch();
+                dispatchNext();
             }
         } catch (RuntimeException exception) {
             if (Thread.currentThread().isInterrupted()) {

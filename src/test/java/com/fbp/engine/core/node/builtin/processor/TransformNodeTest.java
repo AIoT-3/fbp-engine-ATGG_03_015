@@ -4,7 +4,6 @@ import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.edge.connection.LocalConnection;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.builtin.processor.TransformNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +27,7 @@ class TransformNodeTest {
 
         // When
         transformNode.process(new PortMessage("in", inputMessage));
-        Message result = connection.poll();
+        Message result = connection.take();
 
         // Then
         assertAll(

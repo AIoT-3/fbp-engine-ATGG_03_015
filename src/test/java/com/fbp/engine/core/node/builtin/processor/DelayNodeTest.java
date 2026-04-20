@@ -4,7 +4,6 @@ import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.edge.connection.LocalConnection;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.builtin.processor.DelayNode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ class DelayNodeTest {
 
         // When
         delayNode.process(new PortMessage("in", message));
-        Message result = connection.poll();
+        Message result = connection.take();
         long endTime = System.currentTimeMillis();
 
         // Then

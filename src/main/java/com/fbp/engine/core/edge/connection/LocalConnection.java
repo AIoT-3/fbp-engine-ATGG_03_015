@@ -35,7 +35,7 @@ public class LocalConnection implements Connection {
     }
 
     @Override
-    public Message poll() {
+    public Message take() {
         try {
             return buffer.take();
         } catch (InterruptedException e) {
