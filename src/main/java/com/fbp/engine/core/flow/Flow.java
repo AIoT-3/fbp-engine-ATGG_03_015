@@ -4,7 +4,7 @@ import com.fbp.engine.core.edge.connection.Connection;
 import com.fbp.engine.core.edge.connection.ConnectionFactory;
 import com.fbp.engine.core.edge.Edge;
 import com.fbp.engine.core.flow.validation.FlowValidator;
-import com.fbp.engine.core.flow.validation.FlowValidationError;
+import com.fbp.engine.core.flow.validation.FlowValidationFailure;
 import com.fbp.engine.core.flow.validation.FlowValidationSupport;
 import com.fbp.engine.core.node.model.Node;
 import lombok.Getter;
@@ -51,7 +51,7 @@ public class Flow {
         return this;
     }
 
-    public List<FlowValidationError> validate() {
+    public List<FlowValidationFailure> validate() {
         return FlowValidator.validate(this);
     }
 }

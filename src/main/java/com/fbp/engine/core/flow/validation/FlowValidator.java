@@ -14,16 +14,16 @@ public final class FlowValidator {
         /* This utility class should not be instantiated */
     }
 
-    public static List<FlowValidationError> validate(Flow flow) {
+    public static List<FlowValidationFailure> validate(Flow flow) {
         Map<String, Node> nodes = flow.getNodes();
         List<Edge> edges = flow.getEdges();
-        List<FlowValidationError> errors = new ArrayList<>();
+        List<FlowValidationFailure> errors = new ArrayList<>();
 
         // 1. 노드 존재 여부 검증
         try {
             FlowValidationSupport.validateFlowHasNodes(nodes);
         } catch (EngineException e) {
-            errors.add(FlowValidationError.from(e));
+            errors.add(FlowValidationFailure.from(e));
             return errors;
         }
 
@@ -32,7 +32,7 @@ public final class FlowValidator {
             try {
                 FlowValidationSupport.validateEdge(edge, nodes);
             } catch (EngineException e) {
-                errors.add(FlowValidationError.from(e));
+                errors.add(FlowValidationFailure.from(e));
             }
         }
 
@@ -40,7 +40,7 @@ public final class FlowValidator {
         try {
             FlowValidationSupport.validateNoCycles(nodes, edges);
         } catch (EngineException e) {
-            errors.add(FlowValidationError.from(e));
+            errors.add(FlowValidationFailure.from(e));
         }
 
         return errors;

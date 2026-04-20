@@ -10,6 +10,8 @@ public enum EngineFailureType implements FailureType {
     // Flow
     FLOW_NOT_FOUND("플로우를 찾을 수 없습니다."),
     FLOW_NOT_FOUND_BY_ID("플로우를 찾을 수 없습니다: %s"),
+    FLOW_ALREADY_REGISTERED("이미 등록된 플로우입니다: %s"),
+    FLOW_VALIDATION_FAILED("플로우 [%s] 검증에 실패했습니다. 오류 수: %s"),
     EMPTY_FLOW("플로우가 가진 노드가 없습니다."),
     CYCLE_DETECTED("순환 참조가 감지되었습니다."),
 

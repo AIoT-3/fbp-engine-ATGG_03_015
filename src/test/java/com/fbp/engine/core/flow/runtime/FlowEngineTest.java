@@ -3,6 +3,7 @@ package com.fbp.engine.core.flow.runtime;
 import com.fbp.engine.core.exception.EngineException;
 import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.Flow;
+import com.fbp.engine.core.flow.validation.FlowValidationException;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
 import com.fbp.engine.core.node.model.AbstractNode;
@@ -103,6 +104,19 @@ class FlowEngineTest {
     }
 
     @Test
+    @DisplayName("register: 같은 flowId를 중복 등록하면 예외")
+    void testRegisterDuplicateFlowId() {
+        // Given
+        FlowEngine flowEngine = new FlowEngine();
+        flowEngine.register(new Flow("test-flow"));
+
+        // When & Then
+        EngineException exception = assertThrows(EngineException.class,
+                () -> flowEngine.register(new Flow("test-flow")));
+        assertEquals(EngineFailureType.FLOW_ALREADY_REGISTERED, exception.getFailureType());
+    }
+
+    @Test
     @DisplayName("startFlow/stopFlow: 시작 후 RUNNING, 정지 후 STOPPED인지(3)(6)")
     void testStartAndStopFlow() throws InterruptedException {
         // Given
@@ -148,10 +162,14 @@ class FlowEngineTest {
         flowEngine.register(flow);
 
         // When
-        flowEngine.startFlow("invalid-flow");
+        FlowValidationException exception = assertThrows(FlowValidationException.class,
+                () -> flowEngine.startFlow("invalid-flow"));
 
         // Then
         assertAll(
+                () -> assertEquals(EngineFailureType.FLOW_VALIDATION_FAILED, exception.getFailureType()),
+                () -> assertEquals(1, exception.getErrors().size()),
+                () -> assertEquals(EngineFailureType.EMPTY_FLOW, exception.getErrors().getFirst().failureType()),
                 () -> assertEquals(FlowEngineState.INITIALIZED, flowEngine.getState()),
                 () -> assertEquals(FlowRuntimeState.READY, flowEngine.getRuntimes().get("invalid-flow").getState()),
                 () -> assertFalse(flowEngine.getRuntimes().get("invalid-flow").isRunning())

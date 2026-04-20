@@ -3,7 +3,8 @@ package com.fbp.engine.core.flow.runtime;
 import com.fbp.engine.core.flow.Flow;
 import com.fbp.engine.core.exception.EngineException;
 import com.fbp.engine.core.exception.EngineFailureType;
-import com.fbp.engine.core.flow.validation.FlowValidationError;
+import com.fbp.engine.core.flow.validation.FlowValidationFailure;
+import com.fbp.engine.core.flow.validation.FlowValidationException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +26,11 @@ public class FlowEngine {
     }
 
     public void register(Flow flow) {
+        // flow 중복 등록 방지
+        if (runtimes.containsKey(flow.getId())) {
+            throw new EngineException(EngineFailureType.FLOW_ALREADY_REGISTERED, flow.getId());
+        }
+
         runtimes.put(flow.getId(), new FlowRuntime(flow));
         log.info("[Engine] 플로우 '{}' 등록됨", flow.getId());
     }
@@ -36,10 +42,10 @@ public class FlowEngine {
         }
         Flow flow = runtime.getFlow();
 
-        List<FlowValidationError> errors = flow.validate();
+        List<FlowValidationFailure> errors = flow.validate();
         if (!errors.isEmpty()) {
             log.error("[Engine] 플로우 '{}' 검증 실패: {}", flowId, errors);
-            return;
+            throw new FlowValidationException(flowId, errors);
         }
 
         if (runtime.isRunning()) {

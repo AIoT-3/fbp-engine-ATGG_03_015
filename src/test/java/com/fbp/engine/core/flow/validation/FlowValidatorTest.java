@@ -36,7 +36,7 @@ class FlowValidatorTest {
         Flow flow = new Flow("empty-flow");
 
         // When
-        List<FlowValidationError> errors = flow.validate();
+        List<FlowValidationFailure> errors = flow.validate();
 
         // Then
         assertAll(
@@ -58,7 +58,7 @@ class FlowValidatorTest {
                 .connect("source", "out", "target", "in");
 
         // When
-        List<FlowValidationError> errors = flow.validate();
+        List<FlowValidationFailure> errors = flow.validate();
 
         // Then
         assertTrue(errors.isEmpty());
@@ -77,7 +77,7 @@ class FlowValidatorTest {
                 .connect("B", "out", "A", "in");
 
         // When
-        List<FlowValidationError> errors = flow.validate();
+        List<FlowValidationFailure> errors = flow.validate();
 
         // Then
         assertAll(
