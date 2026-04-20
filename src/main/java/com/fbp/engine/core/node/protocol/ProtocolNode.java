@@ -2,11 +2,10 @@ package com.fbp.engine.core.node.protocol;
 
 import com.fbp.engine.core.node.model.AbstractNode;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.Objects;
 
-@Slf4j
 public abstract class ProtocolNode extends AbstractNode {
     private static final long DEFAULT_RETRY_INTERVAL_MS = 5000;
     private static final int DEFAULT_RETRY_COUNT = 10;
@@ -19,7 +18,7 @@ public abstract class ProtocolNode extends AbstractNode {
 
     protected ProtocolNode(String id, Map<String, Object> config, long retryIntervalMs) {
         super(id);
-        this.config = config;
+        this.config = Objects.requireNonNullElse(config, Map.of());
         this.retryIntervalMs = retryIntervalMs;
     }
 
@@ -62,7 +61,7 @@ public abstract class ProtocolNode extends AbstractNode {
             } catch (RuntimeException e) {
                 connectionState = ProtocolConnectionState.ERROR;
                 if (attempt == retryCount) {
-                    return;
+                    throw e;
                 }
 
                 try {
