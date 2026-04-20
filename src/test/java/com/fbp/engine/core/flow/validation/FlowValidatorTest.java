@@ -1,7 +1,7 @@
 package com.fbp.engine.core.flow.validation;
 
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.Flow;
-import com.fbp.engine.core.flow.exception.CycleDetectedException;
 import com.fbp.engine.core.message.PortMessage;
 import com.fbp.engine.core.node.model.AbstractNode;
 import org.junit.jupiter.api.DisplayName;
@@ -30,16 +30,20 @@ class FlowValidatorTest {
     }
 
     @Test
-    @DisplayName("validate: 빈 Flow면 에러 메시지 반환(8)")
+    @DisplayName("validate: 빈 Flow면 검증 에러 반환(8)")
     void testValidateEmptyFlow() {
         // Given
         Flow flow = new Flow("empty-flow");
 
         // When
-        List<String> errors = flow.validate();
+        List<FlowValidationError> errors = flow.validate();
 
         // Then
-        assertEquals(1, errors.size());
+        assertAll(
+                () -> assertEquals(1, errors.size()),
+                () -> assertEquals(EngineFailureType.EMPTY_FLOW, errors.getFirst().failureType()),
+                () -> assertEquals(EngineFailureType.EMPTY_FLOW.getMessageTemplate(), errors.getFirst().message())
+        );
     }
 
     @Test
@@ -54,14 +58,14 @@ class FlowValidatorTest {
                 .connect("source", "out", "target", "in");
 
         // When
-        List<String> errors = flow.validate();
+        List<FlowValidationError> errors = flow.validate();
 
         // Then
         assertTrue(errors.isEmpty());
     }
 
     @Test
-    @DisplayName("validate: 순환 참조가 있으면 에러 메시지 반환(12)")
+    @DisplayName("validate: 순환 참조가 있으면 검증 에러 반환(12)")
     void testValidateCycle() {
         // Given
         Flow flow = new Flow("cycle-flow");
@@ -73,12 +77,13 @@ class FlowValidatorTest {
                 .connect("B", "out", "A", "in");
 
         // When
-        List<String> errors = flow.validate();
+        List<FlowValidationError> errors = flow.validate();
 
         // Then
         assertAll(
                 () -> assertEquals(1, errors.size()),
-                () -> assertEquals(new CycleDetectedException().getMessage(), errors.get(0))
+                () -> assertEquals(EngineFailureType.CYCLE_DETECTED, errors.getFirst().failureType()),
+                () -> assertEquals(EngineFailureType.CYCLE_DETECTED.getMessageTemplate(), errors.getFirst().message())
         );
     }
 }

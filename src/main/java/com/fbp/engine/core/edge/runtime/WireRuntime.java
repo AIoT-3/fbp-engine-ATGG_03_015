@@ -1,8 +1,8 @@
 package com.fbp.engine.core.edge.runtime;
 
-import com.fbp.engine.core.flow.exception.FlowRuntimeException;
 import com.fbp.engine.core.edge.Edge;
-import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineExceptionSupport;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.runtime.FlowRuntime;
 import com.fbp.engine.core.port.InputPort;
 
@@ -46,14 +46,11 @@ public class WireRuntime implements Runnable {
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
-            owner.fail(toEngineException(exception));
+            owner.fail(EngineExceptionSupport.toEngineException(
+                    exception,
+                    EngineFailureType.FLOW_RUNTIME_FAILED,
+                    owner.getFlow().getId())
+            );
         }
-    }
-
-    private EngineException toEngineException(Throwable throwable) {
-        if (throwable instanceof EngineException engineException) {
-            return engineException;
-        }
-        return new FlowRuntimeException(owner.getFlow().getId(), throwable);
     }
 }

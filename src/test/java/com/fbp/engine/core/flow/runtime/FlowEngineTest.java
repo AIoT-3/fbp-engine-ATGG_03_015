@@ -1,7 +1,7 @@
 package com.fbp.engine.core.flow.runtime;
 
-import com.fbp.engine.core.flow.exception.FlowRuntimeException;
-import com.fbp.engine.core.flow.exception.FlowNotFoundException;
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.Flow;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
@@ -135,7 +135,8 @@ class FlowEngineTest {
         FlowEngine flowEngine = new FlowEngine();
 
         // When & Then
-        assertThrows(FlowNotFoundException.class, () -> flowEngine.startFlow("missing"));
+        EngineException exception = assertThrows(EngineException.class, () -> flowEngine.startFlow("missing"));
+        assertEquals(EngineFailureType.FLOW_NOT_FOUND_BY_ID, exception.getFailureType());
     }
 
     @Test
@@ -247,8 +248,8 @@ class FlowEngineTest {
                 () -> assertTrue(processed),
                 () -> assertTrue(failed),
                 () -> assertEquals(FlowRuntimeState.FAILED, flowEngine.getRuntimes().get("failed-flow").getState()),
-                () -> assertInstanceOf(FlowRuntimeException.class,
-                        flowEngine.getRuntimes().get("failed-flow").getLastFailure()),
+                () -> assertEquals(EngineFailureType.FLOW_RUNTIME_FAILED,
+                        flowEngine.getRuntimes().get("failed-flow").getLastFailure().getFailureType()),
                 () -> assertInstanceOf(IllegalStateException.class,
                         flowEngine.getRuntimes().get("failed-flow").getLastFailure().getCause()),
                 () -> assertEquals(FlowEngineState.STOPPED, flowEngine.getState())

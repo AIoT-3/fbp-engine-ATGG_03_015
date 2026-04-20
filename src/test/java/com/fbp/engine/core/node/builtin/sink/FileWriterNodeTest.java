@@ -1,9 +1,9 @@
 package com.fbp.engine.core.node.builtin.sink;
 
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.builtin.sink.FileWriterNode;
-import com.fbp.engine.core.node.exception.FileNodeOperationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -63,7 +63,8 @@ class FileWriterNodeTest {
         fileWriterNode.shutdown();
 
         // When & Then
-        assertThrows(FileNodeOperationException.class,
+        EngineException exception = assertThrows(EngineException.class,
                 () -> fileWriterNode.process(new PortMessage("in", Message.of(Map.of("value", 1)))));
+        assertEquals(EngineFailureType.FILE_NODE_OPERATION_FAILED, exception.getFailureType());
     }
 }

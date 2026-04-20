@@ -1,7 +1,8 @@
 package com.fbp.engine.core.node.runtime;
 
-import com.fbp.engine.core.flow.exception.FlowRuntimeException;
 import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineExceptionSupport;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.runtime.FlowRuntime;
 import com.fbp.engine.core.node.model.InboxNode;
 import com.fbp.engine.core.node.model.Node;
@@ -42,16 +43,17 @@ public class NodeRuntime implements Runnable {
             }
 
             if (!(node instanceof InboxNode)) {
-                throw new FlowRuntimeException(owner.getFlow().getId(),
-                        new IllegalStateException("Polling node는 InboxNode의 구현체여야 합니다: " + node.getId()));
+                throw new EngineException(EngineFailureType.INVALID_NODE_EXECUTION_MODE, node.getId());
             }
 
             executionHandle = executorService.submit(this);
             state = NodeRuntimeState.RUNNING;
         } catch (RuntimeException exception) {
-            lastFailure = toEngineException(exception);
+            EngineException failure = EngineExceptionSupport.toEngineException(
+                    exception, EngineFailureType.FLOW_RUNTIME_FAILED, owner.getFlow().getId());
+            lastFailure = failure;
             state = NodeRuntimeState.FAILED;
-            throw exception;
+            throw failure;
         } finally {
             lifecycleLock.unlock();
         }
@@ -108,15 +110,9 @@ public class NodeRuntime implements Runnable {
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
-            recordFailure(toEngineException(exception));
+            recordFailure(EngineExceptionSupport.toEngineException(
+                    exception, EngineFailureType.FLOW_RUNTIME_FAILED, owner.getFlow().getId()));
         }
-    }
-
-    private EngineException toEngineException(Throwable throwable) {
-        if (throwable instanceof EngineException engineException) {
-            return engineException;
-        }
-        return new FlowRuntimeException(owner.getFlow().getId(), throwable);
     }
 
     private void recordFailure(EngineException failure) {

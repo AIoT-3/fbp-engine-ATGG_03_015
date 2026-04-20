@@ -2,49 +2,45 @@ package com.fbp.engine.core.flow.validation;
 
 import com.fbp.engine.core.flow.Flow;
 import com.fbp.engine.core.edge.Edge;
-import com.fbp.engine.core.flow.exception.CycleDetectedException;
-import com.fbp.engine.core.flow.exception.EmptyFlowException;
-import com.fbp.engine.core.flow.exception.FlowNotFoundException;
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.node.model.Node;
-import com.fbp.engine.core.node.exception.NodeNotFoundException;
-import com.fbp.engine.core.port.exception.InputPortNotFoundException;
-import com.fbp.engine.core.port.exception.OutputPortNotFoundException;
 
 import java.util.*;
 
-public class FlowValidationSupport {
+public final class FlowValidationSupport {
     private FlowValidationSupport() {
         /* This utility class should not be instantiated */
     }
 
     public static void validateFlowExists(Flow flow) {
         if (flow == null) {
-            throw new FlowNotFoundException();
+            throw new EngineException(EngineFailureType.FLOW_NOT_FOUND);
         }
     }
 
     public static void validateFlowHasNodes(Map<String, Node> nodes) {
         if (nodes == null || nodes.isEmpty()) {
-            throw new EmptyFlowException();
+            throw new EngineException(EngineFailureType.EMPTY_FLOW);
         }
     }
 
     public static void validateNodeExists(Map<String, Node> nodes, String nodeId) {
         if (nodeId == null || nodeId.isEmpty()
                 || !nodes.containsKey(nodeId)) {
-            throw new NodeNotFoundException(nodeId);
+            throw new EngineException(EngineFailureType.NODE_NOT_FOUND, nodeId);
         }
     }
 
     public static void validateInputPortExists(Node node, String portName) {
         if (node.getInputPort(portName) == null) {
-            throw new InputPortNotFoundException(node.getId(), portName);
+            throw new EngineException(EngineFailureType.INPUT_PORT_NOT_FOUND, node.getId(), portName);
         }
     }
 
     public static void validateOutputPortExists(Node node, String portName) {
         if (node.getOutputPort(portName) == null) {
-            throw new OutputPortNotFoundException(node.getId(), portName);
+            throw new EngineException(EngineFailureType.OUTPUT_PORT_NOT_FOUND, node.getId(), portName);
         }
     }
 
@@ -96,7 +92,7 @@ public class FlowValidationSupport {
 
         // 5. 처리된 노드 수와 전체 노드 수를 비교하여 순환 참조 여부 판단
         if (processedCount != nodes.size()) {
-            throw new CycleDetectedException();
+            throw new EngineException(EngineFailureType.CYCLE_DETECTED);
         }
     }
 
@@ -108,7 +104,7 @@ public class FlowValidationSupport {
 //
 //        for (String startNodeId : nodes.keySet()) {
 //            if (!visited.contains(startNodeId) && hasCycleFrom(startNodeId, nodeGraph, visiting, visited)) {
-//                throw new CycleDetectedException();
+//                throw new EngineException(EngineFailureType.CYCLE_DETECTED);
 //            }
 //        }
 //    }

@@ -1,7 +1,9 @@
 package com.fbp.engine.core.flow.runtime;
 
 import com.fbp.engine.core.flow.Flow;
-import com.fbp.engine.core.flow.exception.FlowNotFoundException;
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
+import com.fbp.engine.core.flow.validation.FlowValidationError;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,11 +32,11 @@ public class FlowEngine {
     public void startFlow(String flowId) {
         FlowRuntime runtime = runtimes.get(flowId);
         if (runtime == null) {
-            throw new FlowNotFoundException(flowId);
+            throw new EngineException(EngineFailureType.FLOW_NOT_FOUND_BY_ID, flowId);
         }
         Flow flow = runtime.getFlow();
 
-        List<String> errors = flow.validate();
+        List<FlowValidationError> errors = flow.validate();
         if (!errors.isEmpty()) {
             log.error("[Engine] 플로우 '{}' 검증 실패: {}", flowId, errors);
             return;
@@ -52,7 +54,7 @@ public class FlowEngine {
     public void stopFlow(String flowId) {
         FlowRuntime runtime = runtimes.get(flowId);
         if (runtime == null) {
-            throw new FlowNotFoundException(flowId);
+            throw new EngineException(EngineFailureType.FLOW_NOT_FOUND_BY_ID, flowId);
         }
 
         runtime.stop();

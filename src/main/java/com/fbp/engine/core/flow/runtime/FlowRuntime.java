@@ -1,9 +1,10 @@
 package com.fbp.engine.core.flow.runtime;
 
-import com.fbp.engine.core.flow.exception.FlowRuntimeException;
 import com.fbp.engine.core.edge.Edge;
 import com.fbp.engine.core.edge.runtime.WireRuntime;
 import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineExceptionSupport;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.Flow;
 import com.fbp.engine.core.node.model.Node;
 import com.fbp.engine.core.node.runtime.NodeRuntime;
@@ -45,10 +46,12 @@ public class FlowRuntime {
             try {
                 startRuntimes(executorService);
             } catch (RuntimeException e) {
+                EngineException failure = EngineExceptionSupport.toEngineException(
+                        e, EngineFailureType.FLOW_RUNTIME_FAILED, flow.getId());
                 state = FlowRuntimeState.FAILED;
-                lastFailure = new FlowRuntimeException(flow.getId(), e);
+                lastFailure = failure;
                 stopRuntimes();
-                throw e;
+                throw failure;
             }
         } finally {
             lifecycleLock.unlock();

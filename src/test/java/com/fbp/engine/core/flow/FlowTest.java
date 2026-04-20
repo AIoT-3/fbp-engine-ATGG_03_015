@@ -1,6 +1,7 @@
 package com.fbp.engine.core.flow;
 
 import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.message.PortMessage;
 import com.fbp.engine.core.node.model.AbstractNode;
 import org.junit.jupiter.api.DisplayName;
@@ -68,8 +69,9 @@ class FlowTest {
         flow.addNode(targetNode);
 
         // When & Then
-        assertThrows(EngineException.class,
+        EngineException exception = assertThrows(EngineException.class,
                 () -> flow.connect("source", "out", "target", "in"));
+        assertEquals(EngineFailureType.NODE_NOT_FOUND, exception.getFailureType());
     }
 
     @Test
@@ -81,8 +83,9 @@ class FlowTest {
         flow.addNode(sourceNode);
 
         // When & Then
-        assertThrows(EngineException.class,
+        EngineException exception = assertThrows(EngineException.class,
                 () -> flow.connect("source", "out", "target", "in"));
+        assertEquals(EngineFailureType.NODE_NOT_FOUND, exception.getFailureType());
     }
 
     @Test
@@ -95,8 +98,9 @@ class FlowTest {
         flow.addNode(sourceNode).addNode(targetNode);
 
         // When & Then
-        assertThrows(EngineException.class,
+        EngineException exception = assertThrows(EngineException.class,
                 () -> flow.connect("source", "없는포트", "target", "in"));
+        assertEquals(EngineFailureType.OUTPUT_PORT_NOT_FOUND, exception.getFailureType());
     }
 
     @Test
@@ -109,8 +113,9 @@ class FlowTest {
         flow.addNode(sourceNode).addNode(targetNode);
 
         // When & Then
-        assertThrows(EngineException.class,
+        EngineException exception = assertThrows(EngineException.class,
                 () -> flow.connect("source", "out", "target", "없는포트"));
+        assertEquals(EngineFailureType.INPUT_PORT_NOT_FOUND, exception.getFailureType());
     }
 
     @Test

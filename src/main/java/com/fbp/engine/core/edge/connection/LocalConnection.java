@@ -1,7 +1,7 @@
 package com.fbp.engine.core.edge.connection;
 
-import com.fbp.engine.core.edge.exception.ConnectionDeliveryException;
-import com.fbp.engine.core.edge.exception.ConnectionPollException;
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.message.Message;
 import lombok.Getter;
 
@@ -30,7 +30,7 @@ public class LocalConnection implements Connection {
             buffer.put(message);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ConnectionDeliveryException(id, e);
+            throw new EngineException(EngineFailureType.CONNECTION_DELIVERY_INTERRUPTED, e, id);
         }
     }
 
@@ -40,7 +40,7 @@ public class LocalConnection implements Connection {
             return buffer.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ConnectionPollException(id, e);
+            throw new EngineException(EngineFailureType.CONNECTION_POLL_INTERRUPTED, e, id);
         }
     }
 

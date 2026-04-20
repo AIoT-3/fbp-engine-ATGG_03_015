@@ -4,10 +4,10 @@ import com.fbp.engine.core.port.impl.DefaultInputPort;
 import com.fbp.engine.core.port.impl.DefaultOutputPort;
 import com.fbp.engine.core.port.InputPort;
 import com.fbp.engine.core.port.OutputPort;
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.message.Message;
 import com.fbp.engine.core.message.PortMessage;
-import com.fbp.engine.core.node.exception.NodeInputDequeueException;
-import com.fbp.engine.core.node.exception.NodeInputEnqueueException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -68,7 +68,7 @@ public abstract class AbstractNode implements InboxNode {
             inbox.put(new PortMessage(inputPortName, message));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new NodeInputEnqueueException(getId());
+            throw new EngineException(EngineFailureType.NODE_INPUT_ENQUEUE_INTERRUPTED, e, getId());
         }
     }
 
@@ -78,7 +78,7 @@ public abstract class AbstractNode implements InboxNode {
             return inbox.take();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new NodeInputDequeueException(getId());
+            throw new EngineException(EngineFailureType.NODE_INPUT_DEQUEUE_INTERRUPTED, e, getId());
         }
     }
 

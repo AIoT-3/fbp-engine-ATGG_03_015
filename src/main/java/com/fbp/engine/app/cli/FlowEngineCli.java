@@ -1,11 +1,11 @@
 package com.fbp.engine.app.cli;
 
+import com.fbp.engine.common.exception.FbpException;
 import com.fbp.engine.app.cli.command.Command;
 import com.fbp.engine.app.cli.command.CommandFactory;
 import com.fbp.engine.app.cli.parser.CommandParser;
 import com.fbp.engine.app.cli.parser.ParsedCommand;
 import com.fbp.engine.core.flow.runtime.FlowEngine;
-import com.fbp.engine.core.exception.EngineException;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -35,7 +35,7 @@ public class FlowEngineCli {
 
                 running = parsedCommand.command().execute(flowEngine, parsedCommand.args());
 
-            } catch (EngineException e) {
+            } catch (FbpException e) {
                 System.out.println(e.getMessage());
             }
         }

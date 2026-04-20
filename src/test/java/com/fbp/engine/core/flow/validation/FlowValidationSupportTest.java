@@ -2,22 +2,20 @@ package com.fbp.engine.core.flow.validation;
 
 import com.fbp.engine.core.edge.Edge;
 import com.fbp.engine.core.edge.connection.LocalConnection;
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.Flow;
-import com.fbp.engine.core.flow.exception.CycleDetectedException;
-import com.fbp.engine.core.flow.exception.EmptyFlowException;
-import com.fbp.engine.core.flow.exception.FlowNotFoundException;
 import com.fbp.engine.core.message.PortMessage;
 import com.fbp.engine.core.node.model.AbstractNode;
 import com.fbp.engine.core.node.model.Node;
-import com.fbp.engine.core.node.exception.NodeNotFoundException;
-import com.fbp.engine.core.port.exception.InputPortNotFoundException;
-import com.fbp.engine.core.port.exception.OutputPortNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.fbp.engine.core.exception.EngineFailureType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FlowValidationSupportTest {
@@ -47,9 +45,9 @@ class FlowValidationSupportTest {
 
         // When & Then
         assertAll(
-                () -> assertThrows(FlowNotFoundException.class,
+                () -> assertEngineFailure(FLOW_NOT_FOUND,
                         () -> FlowValidationSupport.validateFlowExists(flow)),
-                () -> assertThrows(EmptyFlowException.class,
+                () -> assertEngineFailure(EMPTY_FLOW,
                         () -> FlowValidationSupport.validateFlowHasNodes(emptyNodes))
         );
     }
@@ -64,11 +62,11 @@ class FlowValidationSupportTest {
 
         // When & Then
         assertAll(
-                () -> assertThrows(NodeNotFoundException.class,
+                () -> assertEngineFailure(NODE_NOT_FOUND,
                         () -> FlowValidationSupport.validateNodeExists(nodes, "missing")),
-                () -> assertThrows(InputPortNotFoundException.class,
+                () -> assertEngineFailure(INPUT_PORT_NOT_FOUND,
                         () -> FlowValidationSupport.validateInputPortExists(outputOnlyNode, "in")),
-                () -> assertThrows(OutputPortNotFoundException.class,
+                () -> assertEngineFailure(OUTPUT_PORT_NOT_FOUND,
                         () -> FlowValidationSupport.validateOutputPortExists(inputOnlyNode, "out"))
         );
     }
@@ -88,7 +86,7 @@ class FlowValidationSupportTest {
         // When & Then
         assertAll(
                 () -> assertDoesNotThrow(() -> FlowValidationSupport.validateEdge(validEdge, nodes)),
-                () -> assertThrows(OutputPortNotFoundException.class,
+                () -> assertEngineFailure(OUTPUT_PORT_NOT_FOUND,
                         () -> FlowValidationSupport.validateEdge(invalidEdge, nodes))
         );
     }
@@ -115,8 +113,13 @@ class FlowValidationSupportTest {
         // When & Then
         assertAll(
                 () -> assertDoesNotThrow(() -> FlowValidationSupport.validateNoCycles(nodes, acyclicEdges)),
-                () -> assertThrows(CycleDetectedException.class,
+                () -> assertEngineFailure(CYCLE_DETECTED,
                         () -> FlowValidationSupport.validateNoCycles(nodes, cyclicEdges))
         );
+    }
+
+    private void assertEngineFailure(EngineFailureType failureType, Executable executable) {
+        EngineException exception = assertThrows(EngineException.class, executable);
+        assertEquals(failureType, exception.getFailureType());
     }
 }

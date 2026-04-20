@@ -1,8 +1,9 @@
 package com.fbp.engine.core.node.builtin.sink;
 
+import com.fbp.engine.core.exception.EngineException;
+import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.message.PortMessage;
 import com.fbp.engine.core.node.model.AbstractNode;
-import com.fbp.engine.core.node.exception.FileNodeOperationException;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -23,14 +24,14 @@ public class FileWriterNode extends AbstractNode {
         try {
             writer = new BufferedWriter(new FileWriter(filePath, true));
         } catch (IOException e) {
-            throw new FileNodeOperationException(String.format("파일 초기화 오류(%s)", filePath), e);
+            throw new EngineException(EngineFailureType.FILE_NODE_OPERATION_FAILED, e, filePath);
         }
     }
 
     @Override
     public void onProcess(PortMessage portMessage) {
         if (writer == null) {
-            throw new FileNodeOperationException();
+            throw new EngineException(EngineFailureType.FILE_NODE_NOT_INITIALIZED);
         }
 
         try {
@@ -38,7 +39,7 @@ public class FileWriterNode extends AbstractNode {
             writer.newLine();
             writer.flush();
         } catch (IOException e) {
-            throw new FileNodeOperationException(String.format("파일 기록 중 오류(%s)", filePath), e);
+            throw new EngineException(EngineFailureType.FILE_NODE_OPERATION_FAILED, e, filePath);
         }
     }
 
@@ -51,7 +52,7 @@ public class FileWriterNode extends AbstractNode {
         try {
             writer.close();
         } catch (IOException e) {
-            throw new FileNodeOperationException(String.format("파일 종료 중 오류(%s)", filePath), e);
+            throw new EngineException(EngineFailureType.FILE_NODE_OPERATION_FAILED, e, filePath);
         }
     }
 }
