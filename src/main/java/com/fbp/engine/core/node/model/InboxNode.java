@@ -6,4 +6,5 @@ import com.fbp.engine.core.message.PortMessage;
 public interface InboxNode extends Node {
     void enqueueInput(String inputPortName, Message message);
     PortMessage takeInput();
+    int getInboxSize();
 }

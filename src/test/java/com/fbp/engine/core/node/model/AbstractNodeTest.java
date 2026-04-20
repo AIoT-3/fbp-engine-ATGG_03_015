@@ -10,6 +10,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,9 +28,19 @@ class AbstractNodeTest {
             super(id);
         }
 
+        private TestNode(String id, int inboxCapacity) {
+            super(id, inboxCapacity);
+        }
+
         @Override
         public void onProcess(PortMessage portMessage) {
             this.processedMessage = portMessage;
+        }
+    }
+
+    private static class LimitedInboxNode extends TestNode {
+        private LimitedInboxNode(String id, int inboxCapacity) {
+            super(id, inboxCapacity);
         }
     }
 
@@ -124,6 +140,57 @@ class AbstractNodeTest {
 
         // When & Then
         assertEquals(NodeExecutionMode.INBOX_DRIVEN, node.executionMode());
+    }
+
+    @Test
+    @DisplayName("inbox: enqueueInput/takeInput 후 inbox size가 예상값과 일치하는지(8)")
+    void testInboxSize() {
+        // Given
+        TestNode node = new TestNode("testNode1");
+        Message message1 = Message.of(Map.of("key1", "value1"));
+        Message message2 = Message.of(Map.of("key2", "value2"));
+
+        // When
+        node.enqueueInput("in", message1);
+        node.enqueueInput("in", message2);
+
+        // Then
+        assertEquals(2, node.getInboxSize());
+
+        // When
+        PortMessage result = node.takeInput();
+
+        // Then
+        assertAll(
+                () -> assertEquals("in", result.inputPortName()),
+                () -> assertEquals(message1, result.message()),
+                () -> assertEquals(1, node.getInboxSize())
+        );
+    }
+
+    @Test
+    @DisplayName("inbox: 용량 초과 enqueueInput은 빈 공간이 생길 때까지 블로킹되는지(9)")
+    void testInboxBlocksWhenFull() throws InterruptedException, ExecutionException {
+        // Given
+        LimitedInboxNode node = new LimitedInboxNode("testNode1", 1);
+        Message message1 = Message.of(Map.of("key1", "value1"));
+        Message message2 = Message.of(Map.of("key2", "value2"));
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        // When
+        node.enqueueInput("in", message1);
+        Future<?> future = executorService.submit(() -> node.enqueueInput("in", message2));
+
+        // Then
+        try {
+            assertThrows(TimeoutException.class, () -> future.get(200, TimeUnit.MILLISECONDS));
+
+            node.takeInput();
+            assertDoesNotThrow(() -> future.get(1, TimeUnit.SECONDS));
+            assertEquals(1, node.getInboxSize());
+        } finally {
+            executorService.shutdownNow();
+        }
     }
 
 }

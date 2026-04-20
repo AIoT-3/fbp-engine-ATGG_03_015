@@ -17,16 +17,22 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 public abstract class AbstractNode implements InboxNode {
+    private static final int DEFAULT_INBOX_CAPACITY = 100;
+
     private final String id;
     private final Map<String, InputPort> inputPorts;
     private final Map<String, OutputPort> outputPorts;
-    private final BlockingQueue<PortMessage> inbox; //todo: 큐 사이즈 제한 필요할듯
+    private final BlockingQueue<PortMessage> inbox;
 
-    protected AbstractNode(String id) {
+    protected AbstractNode(String id, int inboxCapacity) {
         this.id = id;
         this.inputPorts = new HashMap<>();
         this.outputPorts = new HashMap<>();
-        this.inbox = new LinkedBlockingQueue<>();
+        this.inbox = new LinkedBlockingQueue<>(inboxCapacity);
+    }
+
+    protected AbstractNode(String id) {
+        this(id, DEFAULT_INBOX_CAPACITY);
     }
 
     @Override
@@ -80,6 +86,11 @@ public abstract class AbstractNode implements InboxNode {
             Thread.currentThread().interrupt();
             throw new EngineException(EngineFailureType.NODE_INPUT_DEQUEUE_INTERRUPTED, e, getId());
         }
+    }
+
+    @Override
+    public int getInboxSize() {
+        return inbox.size();
     }
 
     protected void addInputPort(String name) {
