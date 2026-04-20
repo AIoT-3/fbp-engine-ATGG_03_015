@@ -20,7 +20,7 @@ public abstract class AbstractNode implements InboxNode {
     private final String id;
     private final Map<String, InputPort> inputPorts;
     private final Map<String, OutputPort> outputPorts;
-    private final BlockingQueue<PortMessage> inbox;
+    private final BlockingQueue<PortMessage> inbox; //todo: 큐 사이즈 제한 필요할듯
 
     protected AbstractNode(String id) {
         this.id = id;
