@@ -2,13 +2,11 @@ package com.fbp.engine.core.flow.runtime;
 
 import com.fbp.engine.core.edge.Edge;
 import com.fbp.engine.core.edge.runtime.WireRuntime;
-import com.fbp.engine.core.exception.EngineException;
-import com.fbp.engine.core.exception.EngineExceptionSupport;
-import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.Flow;
 import com.fbp.engine.core.node.model.Node;
 import com.fbp.engine.core.node.runtime.NodeRuntime;
 import com.fbp.engine.core.port.InputPort;
+import com.fbp.engine.core.runtime.RuntimeFailureSupport;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class FlowRuntime {
     private final List<WireRuntime> wireRuntimes;
     private final ReentrantLock lifecycleLock;
     private FlowRuntimeState state;
-    private EngineException lastFailure;
+    private RuntimeException lastFailure;
 
     public FlowRuntime(Flow flow) {
         this.flow = flow;
@@ -46,8 +44,7 @@ public class FlowRuntime {
             try {
                 startRuntimes(executorService);
             } catch (RuntimeException e) {
-                EngineException failure = EngineExceptionSupport.toEngineException(
-                        e, EngineFailureType.FLOW_RUNTIME_FAILED, flow.getId());
+                RuntimeException failure = RuntimeFailureSupport.normalize(e, flow.getId());
                 state = FlowRuntimeState.FAILED;
                 lastFailure = failure;
                 stopRuntimes();
@@ -68,7 +65,7 @@ public class FlowRuntime {
         }
     }
 
-    public void fail(EngineException exception) {
+    public void fail(RuntimeException exception) {
         lifecycleLock.lock();
         try {
             if (state != FlowRuntimeState.RUNNING) {
@@ -101,7 +98,7 @@ public class FlowRuntime {
         }
     }
 
-    public EngineException getLastFailure() {
+    public RuntimeException getLastFailure() {
         lifecycleLock.lock();
         try {
             return lastFailure;

@@ -1,12 +1,12 @@
 package com.fbp.engine.core.node.runtime;
 
 import com.fbp.engine.core.exception.EngineException;
-import com.fbp.engine.core.exception.EngineExceptionSupport;
 import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.runtime.FlowRuntime;
 import com.fbp.engine.core.node.model.InboxNode;
 import com.fbp.engine.core.node.model.Node;
 import com.fbp.engine.core.node.model.NodeExecutionMode;
+import com.fbp.engine.core.runtime.RuntimeFailureSupport;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -19,7 +19,7 @@ public class NodeRuntime implements Runnable {
     private Future<?> executionHandle;
     private boolean initialized;
     private NodeRuntimeState state;
-    private EngineException lastFailure;
+    private RuntimeException lastFailure;
 
     public NodeRuntime(Node node, FlowRuntime owner) {
         this.node = node;
@@ -49,8 +49,7 @@ public class NodeRuntime implements Runnable {
             executionHandle = executorService.submit(this);
             state = NodeRuntimeState.RUNNING;
         } catch (RuntimeException exception) {
-            EngineException failure = EngineExceptionSupport.toEngineException(
-                    exception, EngineFailureType.FLOW_RUNTIME_FAILED, owner.getFlow().getId());
+            RuntimeException failure = RuntimeFailureSupport.normalize(exception, owner.getFlow().getId());
             lastFailure = failure;
             state = NodeRuntimeState.FAILED;
             throw failure;
@@ -89,7 +88,7 @@ public class NodeRuntime implements Runnable {
         }
     }
 
-    public EngineException getLastFailure() {
+    public RuntimeException getLastFailure() {
         lifecycleLock.lock();
         try {
             return lastFailure;
@@ -110,12 +109,14 @@ public class NodeRuntime implements Runnable {
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
-            recordFailure(EngineExceptionSupport.toEngineException(
-                    exception, EngineFailureType.FLOW_RUNTIME_FAILED, owner.getFlow().getId()));
+            recordFailure(RuntimeFailureSupport.normalize(
+                    exception,
+                    owner.getFlow().getId())
+            );
         }
     }
 
-    private void recordFailure(EngineException failure) {
+    private void recordFailure(RuntimeException failure) {
         lifecycleLock.lock();
         try {
             lastFailure = failure;

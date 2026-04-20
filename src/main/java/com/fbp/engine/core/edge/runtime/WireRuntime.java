@@ -1,10 +1,9 @@
 package com.fbp.engine.core.edge.runtime;
 
 import com.fbp.engine.core.edge.Edge;
-import com.fbp.engine.core.exception.EngineExceptionSupport;
-import com.fbp.engine.core.exception.EngineFailureType;
 import com.fbp.engine.core.flow.runtime.FlowRuntime;
 import com.fbp.engine.core.port.InputPort;
+import com.fbp.engine.core.runtime.RuntimeFailureSupport;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -46,9 +45,8 @@ public class WireRuntime implements Runnable {
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
-            owner.fail(EngineExceptionSupport.toEngineException(
+            owner.fail(RuntimeFailureSupport.normalize(
                     exception,
-                    EngineFailureType.FLOW_RUNTIME_FAILED,
                     owner.getFlow().getId())
             );
         }

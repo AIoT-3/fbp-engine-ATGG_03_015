@@ -260,16 +260,17 @@ class FlowEngineTest {
         boolean processed = processLatch.await(1, TimeUnit.SECONDS);
         boolean failed = waitUntil(() -> flowEngine.getRuntimes().get("failed-flow").getState() == FlowRuntimeState.FAILED,
                 1, TimeUnit.SECONDS);
+        RuntimeException lastFailure = flowEngine.getRuntimes().get("failed-flow").getLastFailure();
 
         // Then
         assertAll(
                 () -> assertTrue(processed),
                 () -> assertTrue(failed),
                 () -> assertEquals(FlowRuntimeState.FAILED, flowEngine.getRuntimes().get("failed-flow").getState()),
+                () -> assertInstanceOf(EngineException.class, lastFailure),
                 () -> assertEquals(EngineFailureType.FLOW_RUNTIME_FAILED,
-                        flowEngine.getRuntimes().get("failed-flow").getLastFailure().getFailureType()),
-                () -> assertInstanceOf(IllegalStateException.class,
-                        flowEngine.getRuntimes().get("failed-flow").getLastFailure().getCause()),
+                        ((EngineException) lastFailure).getFailureType()),
+                () -> assertInstanceOf(IllegalStateException.class, lastFailure.getCause()),
                 () -> assertEquals(FlowEngineState.STOPPED, flowEngine.getState())
         );
 
