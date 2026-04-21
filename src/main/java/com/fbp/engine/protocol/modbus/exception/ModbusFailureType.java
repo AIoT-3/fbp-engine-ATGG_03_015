@@ -27,6 +27,9 @@ public enum ModbusFailureType implements FailureType {
     REGISTER_VALUE_INVALID("MODBUS 레지스터 값이 16비트 범위를 벗어났습니다: value=%s"),
     READ_REGISTER_QUANTITY_INVALID("MODBUS 레지스터 개수가 올바르지 않습니다: quantity=%s"),
 
+    // Node message
+    MESSAGE_FIELD_INVALID("MODBUS 메시지 필드가 올바르지 않습니다: field=%s, value=%s"),
+
     // Simulator
     SIMULATOR_START_FAILED("MODBUS TCP 시뮬레이터 시작에 실패했습니다: port=%s");
 

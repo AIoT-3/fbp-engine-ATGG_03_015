@@ -107,6 +107,17 @@ public abstract class ProtocolNode extends AbstractNode {
         throw new EngineException(EngineFailureType.PROTOCOL_CONFIG_INVALID);
     }
 
+    protected double getDoubleConfig(String key, double defaultValue) {
+        Object value = getConfigValue(key);
+        if (value == null) {
+            return defaultValue;
+        }
+        if (value instanceof Number number) {
+            return number.doubleValue();
+        }
+        throw new EngineException(EngineFailureType.PROTOCOL_CONFIG_INVALID);
+    }
+
     protected boolean getBooleanConfig(String key, boolean defaultValue) {
         Object value = getConfigValue(key);
         if (value == null) {
