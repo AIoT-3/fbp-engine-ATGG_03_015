@@ -13,11 +13,11 @@ public enum ModbusFailureType implements FailureType {
     NOT_CONNECTED("MODBUS TCP 클라이언트가 연결되어 있지 않습니다."),
 
     // I/O and response
-    IO_FAILED("MODBUS TCP 통신 중 I/O 실패가 발생했습니다: operation=%s"),
-    RESPONSE_INVALID("MODBUS 응답 프레임이 올바르지 않습니다: %s"),
+    IO_FAILED("MODBUS TCP 통신 중 I/O 실패가 발생했습니다"),
+    RESPONSE_INVALID("MODBUS 응답 프레임이 올바르지 않습니다"),
     TRANSACTION_ID_MISMATCH("MODBUS transaction id가 일치하지 않습니다: expected=%s, actual=%s"),
     UNKNOWN_EXCEPTION_CODE("알 수 없는 MODBUS exception code입니다: code=%s"),
-    EXCEPTION_RESPONSE("MODBUS exception 응답을 수신했습니다: function=%s, code=%s, description=%s"),
+    EXCEPTION_RESPONSE("MODBUS exception 응답을 수신했습니다: function=%s, code=%s"),
 
     // Register
     REGISTER_ADDRESS_INVALID("MODBUS 레지스터 주소가 올바르지 않습니다: address=%s"),

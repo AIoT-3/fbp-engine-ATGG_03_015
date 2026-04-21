@@ -1,5 +1,7 @@
-package com.fbp.engine.protocol.modbus.exception;
+package com.fbp.engine.protocol.modbus.frame;
 
+import com.fbp.engine.protocol.modbus.exception.ModbusException;
+import com.fbp.engine.protocol.modbus.exception.ModbusFailureType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
