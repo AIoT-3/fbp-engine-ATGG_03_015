@@ -16,11 +16,12 @@ public enum ModbusExceptionCode {
     private final int code;
 
     public static ModbusExceptionCode fromCode(int code) {
-        for (ModbusExceptionCode exceptionCode : values()) {
-            if (exceptionCode.code == code) {
-                return exceptionCode;
-            }
-        }
-        throw new ModbusException(ModbusFailureType.UNKNOWN_EXCEPTION_CODE, code);
+        return switch (code) {
+            case 0x01 -> ILLEGAL_FUNCTION;
+            case 0x02 -> ILLEGAL_DATA_ADDRESS;
+            case 0x03 -> ILLEGAL_DATA_VALUE;
+            case 0x04 -> SLAVE_DEVICE_FAILURE;
+            default -> throw new ModbusException(ModbusFailureType.UNKNOWN_EXCEPTION_CODE, code);
+        };
     }
 }
