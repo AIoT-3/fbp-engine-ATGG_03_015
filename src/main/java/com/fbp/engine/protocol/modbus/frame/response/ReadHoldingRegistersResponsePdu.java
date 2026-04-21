@@ -6,14 +6,12 @@ public record ReadHoldingRegistersResponsePdu(
         int[] registers
 ) implements ModbusResponsePdu {
     public ReadHoldingRegistersResponsePdu {
-        registers = registers().clone();
+        registers = registers != null ? registers.clone() : new int[0];
     }
 
     @Override
     public int[] registers() {
-        return registers != null
-                ? registers.clone()
-                : new int[0];
+        return registers != null ? registers.clone() : new int[0];
     }
 
     @Override
