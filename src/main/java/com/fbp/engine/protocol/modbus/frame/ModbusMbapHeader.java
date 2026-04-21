@@ -8,7 +8,8 @@ public record ModbusMbapHeader(
         int length,
         int unitId
 ) {
-    private static final int PROTOCOL_ID = 0;
+    public static final int HEADER_LENGTH = 7;
+    public static final int PROTOCOL_ID = 0;
 
     public static ModbusMbapHeader requestHeader(
             int transactionId,

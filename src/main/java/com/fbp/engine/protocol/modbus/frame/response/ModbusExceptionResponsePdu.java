@@ -7,7 +7,7 @@ public record ModbusExceptionResponsePdu(
         int exceptionCode
 ) implements ModbusResponsePdu {
 
-    private static final int EXCEPTION_FUNCTION_CODE_MASK = 0x80;
+    public static final int EXCEPTION_FUNCTION_CODE_MASK = 0x80;
 
     @Override
     public int functionCode() {
