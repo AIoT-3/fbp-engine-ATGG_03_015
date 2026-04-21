@@ -2,6 +2,10 @@ package com.fbp.engine.protocol.modbus.frame;
 
 import com.fbp.engine.protocol.modbus.exception.ModbusException;
 import com.fbp.engine.protocol.modbus.exception.ModbusFailureType;
+import com.fbp.engine.protocol.modbus.frame.request.ModbusRequest;
+import com.fbp.engine.protocol.modbus.frame.request.ModbusRequestPdu;
+import com.fbp.engine.protocol.modbus.frame.request.ReadHoldingRegistersRequestPdu;
+import com.fbp.engine.protocol.modbus.frame.request.WriteSingleRegisterRequestPdu;
 import com.fbp.engine.protocol.modbus.frame.response.ModbusExceptionResponsePdu;
 import com.fbp.engine.protocol.modbus.frame.response.ModbusResponse;
 import com.fbp.engine.protocol.modbus.frame.response.ModbusResponsePdu;
@@ -11,7 +15,32 @@ import com.fbp.engine.protocol.modbus.frame.response.WriteSingleRegisterResponse
 public final class ModbusFrameDecoder {
     private ModbusFrameDecoder() {}
 
-    public static ModbusResponse decode(byte[] response) {
+    public static ModbusRequest decodeRequest(byte[] request) {
+        if (request.length < ModbusMbapHeader.HEADER_LENGTH) {
+            throw new ModbusException(ModbusFailureType.RESPONSE_INVALID);
+        }
+
+        ModbusMbapHeader header = new ModbusMbapHeader(
+                ModbusFrameSupport.readUnsignedShort(request, 0),
+                ModbusFrameSupport.readUnsignedShort(request, 2),
+                ModbusFrameSupport.readUnsignedShort(request, 4),
+                request[6] & 0xFF
+        );
+
+        int expectedRequestLength = 6 + header.length();
+        if (request.length != expectedRequestLength) {
+            throw new ModbusException(ModbusFailureType.RESPONSE_INVALID);
+        }
+
+        ModbusRequestPdu pdu = decodeRequestPdu(
+                request,
+                ModbusMbapHeader.HEADER_LENGTH,
+                request[ModbusMbapHeader.HEADER_LENGTH] & 0xFF);
+
+        return new ModbusRequest(header, pdu);
+    }
+
+    public static ModbusResponse decodeResponse(byte[] response) {
         if (response.length < ModbusMbapHeader.HEADER_LENGTH) {
             throw new ModbusException(ModbusFailureType.RESPONSE_INVALID);
         }
@@ -36,13 +65,23 @@ public final class ModbusFrameDecoder {
         return new ModbusResponse(header, pdu);
     }
 
-    public static int responseLength(byte[] mbapHeader) {
+    public static int frameLength(byte[] mbapHeader) {
         if (mbapHeader.length != ModbusMbapHeader.HEADER_LENGTH) {
             throw new ModbusException(ModbusFailureType.RESPONSE_INVALID);
         }
 
         int length = ModbusFrameSupport.readUnsignedShort(mbapHeader, 4);
         return 6 + length;
+    }
+
+    private static ModbusRequestPdu decodeRequestPdu(byte[] request, int pduOffset, int functionCode) {
+        ModbusFunctionCode modbusFunctionCode = ModbusFunctionCode.fromCode(functionCode);
+        return switch (modbusFunctionCode) {
+            case READ_HOLDING_REGISTERS -> decodeFC03RequestPdu(request, pduOffset);
+            case WRITE_SINGLE_REGISTER -> decodeFC06RequestPdu(request, pduOffset);
+            case READ_INPUT_REGISTERS, WRITE_MULTIPLE_REGISTERS ->
+                    throw new ModbusException(ModbusFailureType.UNSUPPORTED_FUNCTION_CODE, functionCode);
+        };
     }
 
     private static ModbusResponsePdu decodeResponsePdu(byte[] response, int pduOffset, int functionCode) {
@@ -63,6 +102,36 @@ public final class ModbusFrameDecoder {
             case READ_INPUT_REGISTERS, WRITE_MULTIPLE_REGISTERS ->
                     throw new ModbusException(ModbusFailureType.UNSUPPORTED_FUNCTION_CODE, functionCode);
         };
+    }
+
+    private static ReadHoldingRegistersRequestPdu decodeFC03RequestPdu(
+            byte[] request,
+            int pduOffset
+    ) {
+        int actualPduLength = request.length - pduOffset;
+        if (actualPduLength != 5) {
+            throw new ModbusException(ModbusFailureType.RESPONSE_INVALID);
+        }
+
+        return new ReadHoldingRegistersRequestPdu(
+                ModbusFrameSupport.readUnsignedShort(request, pduOffset + 1),
+                ModbusFrameSupport.readUnsignedShort(request, pduOffset + 3)
+        );
+    }
+
+    private static WriteSingleRegisterRequestPdu decodeFC06RequestPdu(
+            byte[] request,
+            int pduOffset
+    ) {
+        int actualPduLength = request.length - pduOffset;
+        if (actualPduLength != 5) {
+            throw new ModbusException(ModbusFailureType.RESPONSE_INVALID);
+        }
+
+        return new WriteSingleRegisterRequestPdu(
+                ModbusFrameSupport.readUnsignedShort(request, pduOffset + 1),
+                ModbusFrameSupport.readUnsignedShort(request, pduOffset + 3)
+        );
     }
 
     private static ReadHoldingRegistersResponsePdu decodeFC03ResponsePdu(

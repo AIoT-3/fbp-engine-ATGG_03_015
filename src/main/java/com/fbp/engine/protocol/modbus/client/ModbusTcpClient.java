@@ -148,7 +148,7 @@ public class ModbusTcpClient {
             out.write(ModbusFrameEncoder.encode(request));
             out.flush();
 
-            ModbusResponse response = ModbusFrameDecoder.decode(readResponseFrame());
+            ModbusResponse response = ModbusFrameDecoder.decodeResponse(readResponseFrame());
             ModbusValidator.validateResponse(request, response);
 
             return response;
@@ -166,7 +166,7 @@ public class ModbusTcpClient {
         in.readFully(mbapHeader);
 
         // 2. 전체 프레임 길이 계산
-        int totalLength = ModbusFrameDecoder.responseLength(mbapHeader);
+        int totalLength = ModbusFrameDecoder.frameLength(mbapHeader);
         if (totalLength < ModbusMbapHeader.HEADER_LENGTH) {
             throw new ModbusException(ModbusFailureType.RESPONSE_INVALID);
         }
