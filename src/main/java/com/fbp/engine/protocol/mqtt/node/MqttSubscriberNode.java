@@ -7,7 +7,6 @@ import com.fbp.engine.core.node.protocol.ProtocolNode;
 import com.fbp.engine.protocol.mqtt.support.MqttPayloadMapper;
 import com.fbp.engine.protocol.mqtt.support.MqttQosSupport;
 import com.hivemq.client.mqtt.MqttClient;
-import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import com.hivemq.client.mqtt.mqtt5.message.subscribe.Mqtt5Subscribe;
@@ -15,18 +14,9 @@ import com.hivemq.client.mqtt.mqtt5.message.subscribe.Mqtt5Subscribe;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MqttSubscriberNode extends ProtocolNode {
-    // config keys
-    private static final String CLIENT_ID_KEY = "clientId";
-    private static final String HOST_KEY = "host";
-    private static final String PORT_KEY = "port";
-    private static final String TOPIC_KEY = "topic";
-    private static final String QOS_KEY = "qos";
-    // default values
-    private static final String DEFAULT_HOST = "localhost";
-    private static final int DEFAULT_PORT = 1883;
-    private static final MqttQos DEFAULT_QOS = MqttQos.AT_LEAST_ONCE;
+import static com.fbp.engine.protocol.mqtt.support.MqttConfig.*;
 
+public class MqttSubscriberNode extends ProtocolNode {
     private Mqtt5AsyncClient client;
 
     public MqttSubscriberNode(String id, Map<String, Object> config) {

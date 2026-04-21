@@ -5,23 +5,14 @@ import com.fbp.engine.core.node.protocol.ProtocolNode;
 import com.fbp.engine.protocol.mqtt.support.MqttPayloadMapper;
 import com.fbp.engine.protocol.mqtt.support.MqttQosSupport;
 import com.hivemq.client.mqtt.MqttClient;
-import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 
 import java.util.Map;
 
+import static com.fbp.engine.protocol.mqtt.support.MqttConfig.*;
+
 public class MqttPublisherNode extends ProtocolNode {
-    // config keys
-    private static final String CLIENT_ID_KEY = "clientId";
-    private static final String HOST_KEY = "host";
-    private static final String PORT_KEY = "port";
-    private static final String TOPIC_KEY = "topic";
-    private static final String QOS_KEY = "qos";
     private static final String RETAIN_KEY = "retain";
-    // default values
-    private static final String DEFAULT_HOST = "localhost";
-    private static final int DEFAULT_PORT = 1883;
-    private static final MqttQos DEFAULT_QOS = MqttQos.AT_LEAST_ONCE;
     private static final boolean DEFAULT_RETAIN = false;
 
     private Mqtt5BlockingClient client;
