@@ -33,6 +33,10 @@ public enum EngineFailureType implements FailureType {
     FILE_NODE_OPERATION_FAILED("파일 노드에서 문제가 발생했습니다: %s"),
     FILE_NODE_NOT_INITIALIZED("파일 노드가 초기화되지 않았습니다."),
 
+    // Rule
+    RULE_FIELD_NAME_INVALID("규칙 필드명이 올바르지 않습니다: %s"),
+    RULE_DEFINITION_FIELD_REQUIRED("규칙 정의에 필수 값이 없습니다: %s"),
+
     // Runtime
     FLOW_RUNTIME_FAILED("플로우 실행 중 task가 비정상 종료되었습니다: %s"),
 
